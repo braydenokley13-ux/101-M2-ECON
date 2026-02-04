@@ -1,0 +1,1145 @@
+/***************************************************
+ * MODULE 2 — STEP 1
+ * Menu + Email Capture + Claim Code Scaffolding
+ ***************************************************/
+
+/*************** ON OPEN MENU *****************/
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("Module 2")
+    .addItem("Run SIM Build", "runSIM") 
+    .addItem("Run Shock", "runShock")
+    .addItem("Resolve Shock", "evaluateShockResponse")
+    .addSeparator()
+    .addItem("Grade PRE", "gradePRE")
+    .addItem("Grade MID", "gradeMID")
+    .addItem("Grade POST", "gradePOST")
+    .addSeparator()
+    .addItem("Finalize Results", "finalizeResults")
+    .addToUi();
+}
+
+
+/*************** EMAIL CAPTURE *****************/
+function getStudentEmail_() {
+  const ss = SpreadsheetApp.getActive();
+  const start = ss.getSheetByName("START");
+
+  if (!start) {
+    throw new Error('Missing "START" sheet.');
+  }
+
+  let email = String(start.getRange("B6").getValue()).trim();
+
+  if (email && email.includes("@")) {
+    return email;
+  }
+
+  const ui = SpreadsheetApp.getUi();
+  const response = ui.prompt(
+    "Enter Your Email",
+    "Please enter the email address where your Module 2 results will be sent:",
+    ui.ButtonSet.OK_CANCEL
+  );
+
+  if (response.getSelectedButton() !== ui.Button.OK) {
+    throw new Error("Email entry cancelled.");
+  }
+
+  email = response.getResponseText().trim();
+
+  if (!email || !email.includes("@")) {
+    ui.alert("Invalid email. Please run again and enter a valid email.");
+    throw new Error("Invalid email entered.");
+  }
+
+  start.getRange("B6").setValue(email);
+  return email;
+}
+
+/*************** CLAIM CODE GENERATOR *****************/
+function generateClaimCode_(tier) {
+  const suffix = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+  const tierPools = {
+    GOLD: ["BOW-M2-GOLD", "BOW-M2-PRIME", "BOW-M2-ELITE"],
+    SILVER: ["BOW-M2-SILVER", "BOW-M2-CORE", "BOW-M2-ADV"],
+    BRONZE: ["BOW-M2-BRONZE", "BOW-M2-BASIC", "BOW-M2-FOUND"]
+  };
+
+  const pool = tierPools[tier];
+  const base = pool[Math.floor(Math.random() * pool.length)];
+
+  return `${base}-${suffix}`;
+}
+
+/*************** BEAUTIFUL EMAIL *****************/
+function sendPassEmail_(to, claimCode) {
+  const subject = "Module 2 Complete — Credential Issued";
+
+  const html = `
+  <div style="
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial;
+    background:#0b0f1a;
+    padding:40px;
+    color:#ffffff;
+  ">
+    <div style="
+      max-width:640px;
+      margin:auto;
+      background:#111827;
+      border-radius:16px;
+      padding:36px;
+      box-shadow:0 25px 50px rgba(0,0,0,0.45);
+    ">
+
+      <div style="
+        font-size:12px;
+        letter-spacing:0.15em;
+        color:#9ca3af;
+        margin-bottom:14px;
+      ">
+        BOW SPORTS CAPITAL · MODULE 2
+      </div>
+
+      <h1 style="
+        font-size:30px;
+        font-weight:700;
+        margin:0 0 10px 0;
+        color:#ffffff;
+      ">
+        Module Completed
+      </h1>
+
+      <div style="
+        font-size:17px;
+        color:#93c5fd;
+        margin-bottom:30px;
+      ">
+        Economic Decision-Making Evaluation
+      </div>
+
+      <p style="font-size:16px;line-height:1.6;color:#e5e7eb;">
+        You have successfully completed <strong>Module 2</strong>.
+        This credential verifies your understanding of core economic concepts
+        and your ability to respond to real-world market changes.
+      </p>
+
+      <div style="
+        margin:28px 0;
+        padding:18px;
+        background:#020617;
+        border-radius:12px;
+        text-align:center;
+      ">
+        <div style="font-size:13px;color:#9ca3af;margin-bottom:6px;">
+          OFFICIAL CLAIM CODE
+        </div>
+        <div style="
+          font-size:26px;
+          font-weight:800;
+          letter-spacing:0.06em;
+          color:#fbbf24;
+        ">
+          ${claimCode}
+        </div>
+      </div>
+
+      <p style="font-size:15px;color:#e5e7eb;">
+        Keep this code for verification or future use.
+        Additional instructions may be provided by your instructor.
+      </p>
+
+      <div style="
+        margin-top:32px;
+        padding-top:18px;
+        border-top:1px solid #1f2937;
+        font-size:13px;
+        color:#9ca3af;
+      ">
+        This result was generated automatically by the BOW Simulation Engine.
+      </div>
+
+    </div>
+  </div>
+  `;
+
+  MailApp.sendEmail({
+    to,
+    subject,
+    htmlBody: html
+  });
+}
+
+/*************** PLACEHOLDERS (SAFE) *****************/
+function runShockPlaceholder() {
+  const email = getStudentEmail_();
+  SpreadsheetApp.getUi().alert(
+    "Shock Ready",
+    "The market shock will be triggered here in the next step.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
+
+
+/***************************************************
+ * MODULE 2 — STEP 2
+ * Market Shock Engine (Slight Noise)
+ ***************************************************/
+function pickShockScenario_() {
+  const scenarios = [
+    {
+      id: "COST_INCREASE",
+      title: "Market Shock — Cost Increase",
+      description: "Fuel and labor costs rise across the market. Margins are under pressure."
+    },
+    {
+      id: "DEMAND_SURGE",
+      title: "Market Shock — Demand Surge",
+      description: "A viral trend causes a sudden spike in customer demand."
+    },
+    {
+      id: "REGULATION",
+      title: "Market Shock — New Regulation",
+      description: "New labor and pricing regulations increase compliance costs."
+    }
+  ];
+
+  return scenarios[Math.floor(Math.random() * scenarios.length)];
+}
+
+function runShock() {
+  const ss = SpreadsheetApp.getActive();
+  const shock = ss.getSheetByName("SHOCK");
+  if (!shock) throw new Error('Missing "SHOCK" sheet.');
+
+  // Ensure email exists
+  getStudentEmail_();
+
+  // Prevent re-run
+  const alreadyRun = shock.getRange("B9").getValue();
+  if (alreadyRun === "SHOCK_COMPLETE") {
+    SpreadsheetApp.getUi().alert(
+      "Shock Already Run",
+      "The market shock can only be run once.",
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+    return;
+  }
+
+  // Write shock description
+  const scenario = pickShockScenario_();
+
+shock.getRange("A1:F1").setValue(scenario.title);
+shock.getRange("A2:F2").setValue(scenario.description);
+shock.getRange("B8").setValue(scenario.id); // store scenario type
+
+
+  SpreadsheetApp.getUi().alert(
+    "Market Shock Triggered",
+    "Costs have increased across the market. Choose ONE response.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+
+  // Mark shock as active
+  shock.getRange("B9").setValue("AWAITING_RESPONSE");
+}
+
+/*************** RESPONSE EVALUATION *****************/
+function evaluateShockResponse() {
+  const ss = SpreadsheetApp.getActive();
+  const shock = ss.getSheetByName("SHOCK");
+  const sim = ss.getSheetByName("SIM");
+  if (!shock) throw new Error('Missing "SHOCK" sheet.');
+  if (!sim) throw new Error('Missing "SIM" sheet.');
+
+  // Require that shock was started
+  let state = String(shock.getRange("B9").getValue()).trim();
+
+// AUTO-INITIALIZE SHOCK IF NEEDED
+if (!state) {
+  const scenario = pickShockScenario_();
+  shock.getRange("A1:F1").setValue(scenario.title);
+  shock.getRange("A2:F2").setValue(scenario.description);
+  shock.getRange("B8").setValue(scenario.id);
+  shock.getRange("B9").setValue("AWAITING_RESPONSE");
+  state = "AWAITING_RESPONSE";
+}
+
+// Prevent double resolution
+if (state === "SHOCK_COMPLETE") {
+  SpreadsheetApp.getUi().alert(
+    "Shock Already Resolved",
+    "The shock can only be resolved once.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+  return;
+}
+
+  // Prevent re-resolve (only once)
+  if (state === "SHOCK_COMPLETE") {
+    SpreadsheetApp.getUi().alert(
+      "Shock Already Resolved",
+      "The shock can only be resolved once.",
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+    return;
+  }
+
+  // Read response
+  const rawResponse = String(shock.getRange("B7").getValue()).trim();
+  if (!rawResponse) {
+    SpreadsheetApp.getUi().alert(
+      "No Response Selected",
+      "Please select a shock response in SHOCK!B7.",
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+    return;
+  }
+
+  const response = normalizeShockResponse_(rawResponse);
+
+  // 1) READ BASELINE VALUES FROM SIM (THE REAL SOURCE)
+const baseOrders = Number(sim.getRange("E30").getValue());
+const baseRestaurants = Number(sim.getRange("E31").getValue());
+const baseDrivers = Number(sim.getRange("E32").getValue());
+const baseCompetition = Number(sim.getRange("E33").getValue());
+
+if ([baseOrders, baseRestaurants, baseDrivers, baseCompetition].some(isNaN)) {
+  SpreadsheetApp.getUi().alert(
+    "Run SIM First",
+    "Please complete the SIM build before resolving the shock.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+  return;
+}
+
+// 2) SHOCK DELTAS
+const scenarioId = String(shock.getRange("B8").getValue());
+const deltas = getShockResponseDeltas_(response, scenarioId);
+
+
+// 3) APPLY SHOCK + SMALL NOISE
+const ordersScore = clamp_(baseOrders + deltas.orders + randInt_(-3, 3), 0, 100);
+const restaurantScore = clamp_(baseRestaurants + deltas.partners + randInt_(-3, 3), 0, 100);
+const driverScore = clamp_(baseDrivers + deltas.partners + randInt_(-3, 3), 0, 100);
+const competitionScore = clamp_(baseCompetition + deltas.platform + randInt_(-3, 3), 0, 100);
+
+// 4) WRITE BACK TO SIM (AUTHORITATIVE)
+sim.getRange("E30").setValue(ordersScore);
+sim.getRange("E31").setValue(restaurantScore);
+sim.getRange("E32").setValue(driverScore);
+sim.getRange("E33").setValue(competitionScore);
+
+// Recalculate system health
+const systemHealth = Math.round(
+  (ordersScore + restaurantScore + driverScore + competitionScore) / 4
+);
+sim.getRange("E35").setValue(systemHealth);
+ 
+  SpreadsheetApp.getUi().alert(
+    "Shock Resolved",
+    "Your earlier SIM decisions shaped your baseline. The market shock applied pressure and produced these results.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+  shock.getRange("B9").setValue("SHOCK_COMPLETE");
+shock.getRange("B10").setValue(response);
+sim.getRange("E29").setValue("SHOCK_APPLIED");
+
+}
+/*************** SHOCK HELPERS ***************/
+
+// IMPORTANT: These are the SIM “Your Choice” cells.
+// Based on your SIM layout, these are typically C9, C13, C17, C21.
+// If yours differ, update these four addresses.
+
+
+/**
+ * Weighted baseline model:
+ * - Each SIM decision contributes differently to Orders / Partners / Platform.
+ * - Baseline starts at 75 and moves modestly (not too detrimental).
+ */
+
+/**
+ * Shock response deltas: keep these modest.
+ * We do NOT want shock to be overly punitive.
+ */
+function getShockResponseDeltas_(response, scenarioId) {
+
+  const map = {
+    "Raise customer prices": { orders: -7, partners: +1, platform: +6 },
+    "Reduce partner payouts": { orders: +1, partners: -7, platform: +6 },
+    "Accept lower platform profit": { orders: +4, partners: +4, platform: -7 },
+    "Cut service levels": { orders: -6, partners: -4, platform: +2 }
+  };
+
+  // Default safe
+  return map[response] || { orders: 0, partners: 0, platform: 0 };
+}
+
+/**
+ * Normalizes shock response text so minor spelling/case differences don’t break grading.
+ * (Your current dropdown shows slightly truncated labels; this prevents errors.)
+ */
+function normalizeShockResponse_(raw) {
+  const t = normalizeText_(raw);
+
+  if (t.startsWith("raise")) return "Raise customer prices";
+  if (t.startsWith("reduce")) return "Reduce partner payouts";
+  if (t.startsWith("accept")) return "Accept lower platform profit";
+  if (t.startsWith("cut")) return "Cut service levels";
+
+  // fallback: return raw (but evaluation may not find deltas)
+  return raw.trim();
+}
+
+function label_(score) {
+  if (score >= 85) return "Strong";
+  if (score >= 70) return "Stable";
+  return "Decreasing";
+}
+
+function clamp_(n, lo, hi) {
+  return Math.max(lo, Math.min(hi, n));
+}
+
+function randInt_(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function normalizeText_(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+/*************** SIM DECISION SCORING (EDIT LABEL MATCHES ONCE) ***************/
+
+/**
+ * IMPORTANT:
+ * These functions look for keywords inside the SIM dropdown text.
+ * If your SIM options use different words, update the keyword checks.
+ * This avoids you needing to hardcode exact full strings.
+ */
+
+/***************************************************
+ * MODULE 2 — STEP 3 (STATIC MCQ GRADING)
+ * Grades PRE / MID / POST using ANSWER_KEY
+ * Writes to RESULTS dashboard
+ ***************************************************/
+
+/*************** CONFIG: RESULTS CELL MAP ***************/
+// These match the RESULTS dashboard file we built:
+// Score cards: A7,B7,C7,D7
+// Concept mastery statuses: B11:B16
+const RESULTS_CELLS = {
+  status: "A4",               // merged A4:E4 holds STATUS: ...
+  preCard: "A7",
+  midCard: "B7",
+  postCard: "C7",
+  overallCard: "D7",
+  conceptStartRow: 11,        // concepts listed in A11:A16, statuses in B11:B16
+  conceptNameCol: "A",
+  conceptStatusCol: "B",
+  causeBox: "A19"             // merged A19:E21
+};
+
+/*************** CONFIG: PASS MODEL (used later in finalize) ***************/
+// Not enforced here yet; Step 3 just computes metrics.
+const WEIGHTS = { PRE: 0.20, MID: 0.30, POST: 0.50 };
+
+/*************** CONCEPT MAP (EDIT THIS ONCE) ***************/
+// Map each question to ONE primary concept.
+// Keys must be like: "MCQ_PRE_1", "MCQ_MID_3", "MCQ_POST_7"
+const QUESTION_CONCEPT_MAP = {
+  // PRE (5)
+  "MCQ_PRE_1": "Revenue Generation",
+  "MCQ_PRE_2": "Market Size",
+  "MCQ_PRE_3": "Revenue Sharing",
+  "MCQ_PRE_4": "Competitive Balance",
+  "MCQ_PRE_5": "Elasticity of Demand",
+
+  // MID (5)
+  "MCQ_MID_1": "Revenue Generation",
+  "MCQ_MID_2": "Market Size",
+  "MCQ_MID_3": "Revenue Sharing",
+  "MCQ_MID_4": "Competitive Balance",
+  "MCQ_MID_5": "Tradeoffs",
+
+  // POST (10) — static for now (we’ll make some contextual next)
+  "MCQ_POST_1": "Elasticity of Demand",
+  "MCQ_POST_2": "Elasticity of Demand",
+  "MCQ_POST_3": "Tradeoffs",
+  "MCQ_POST_4": "Tradeoffs",
+  "MCQ_POST_5": "Competitive Balance",
+  "MCQ_POST_6": "Revenue Sharing",
+  "MCQ_POST_7": "Tradeoffs",
+  "MCQ_POST_8": "Elasticity of Demand",
+  "MCQ_POST_9": "Revenue Sharing",
+  "MCQ_POST_10": "Tradeoffs"
+};
+
+/*************** PUBLIC ROUTERS ***************/
+function gradePRE() { gradeSection_("MCQ_PRE"); }
+function gradeMID() { gradeSection_("MCQ_MID"); }
+function gradePOST() {
+  const ss = SpreadsheetApp.getActive();
+  const sim = ss.getSheetByName("SIM");
+
+  const shockApplied = String(sim.getRange("E29").getValue()).trim();
+
+  if (shockApplied !== "SHOCK_APPLIED") {
+    SpreadsheetApp.getUi().alert(
+      "Shock Required",
+      "Please run and resolve the market shock before grading POST MCQs.",
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+    return;
+  }
+
+  gradeSection_("MCQ_POST");
+}
+
+
+/*************** CORE: GRADE ONE SECTION ***************/
+function gradeSection_(sectionSheetName) {
+  const ss = SpreadsheetApp.getActive();
+  const email = getStudentEmail_();
+
+  const mcqSheet = ss.getSheetByName(sectionSheetName);
+  if (!mcqSheet) throw new Error(`Missing sheet: ${sectionSheetName}`);
+
+  const keySheet = ss.getSheetByName("ANSWER_KEY");
+  if (!keySheet) throw new Error('Missing sheet: "ANSWER_KEY"');
+
+  const results = ss.getSheetByName("RESULTS");
+  if (!results) throw new Error('Missing sheet: "RESULTS"');
+
+  const answerKey = loadAnswerKey_(keySheet, sectionSheetName);
+  const studentAnswers = readStudentAnswers_(mcqSheet, answerKey.total);
+
+  // Grade
+  const graded = gradeAnswers_(sectionSheetName, studentAnswers, answerKey);
+
+  // Write section score card
+  writeSectionScoreToResults_(results, sectionSheetName, graded);
+
+  // Update overall snapshot + concept mastery (based on whatever has been graded so far)
+  updateOverallAndConcepts_(ss);
+
+  // Log
+  logAttempt_(ss, email, sectionSheetName, graded);
+
+  SpreadsheetApp.getUi().alert(
+    "Section Graded",
+    `${sectionSheetName} scored ${graded.correct}/${graded.total} (${graded.percent}%).`,
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
+
+/*************** LOAD ANSWER KEY ***************/
+function loadAnswerKey_(keySheet, sectionName) {
+  const data = keySheet.getDataRange().getValues();
+  // Expected columns: SECTION | QUESTION | CORRECT
+  const keyByQ = {};
+  let total = 0;
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const sec = String(row[0]).trim();
+    const q = Number(row[1]);
+    const corr = String(row[2]).trim().toUpperCase();
+
+    if (sec === sectionName && q && corr) {
+      keyByQ[q] = corr;
+      total = Math.max(total, q);
+    }
+  }
+
+  if (total === 0) throw new Error(`No key rows found for ${sectionName} in ANSWER_KEY.`);
+
+  return { keyByQ, total };
+}
+
+/*************** READ STUDENT ANSWERS (NO HARDCODED CELLS) ***************/
+// Finds rows where column B contains "Your Answer:" and reads column C for the letter.
+function readStudentAnswers_(mcqSheet, expectedCount) {
+  const lastRow = mcqSheet.getLastRow();
+  const colB = mcqSheet.getRange(1, 2, lastRow, 1).getValues(); // B
+  const answers = [];
+
+  for (let r = 0; r < colB.length; r++) {
+    const v = String(colB[r][0]).trim().toLowerCase();
+    if (v === "your answer:" || v === "your answer") {
+      const letter = String(mcqSheet.getRange(r + 1, 3).getValue()).trim().toUpperCase(); // C
+      answers.push(letter);
+    }
+  }
+
+  // If template changes, we still want to fail loudly instead of silently.
+  if (expectedCount && answers.length < expectedCount) {
+    throw new Error(
+      `Found only ${answers.length} answer cells in ${mcqSheet.getName()}, expected ${expectedCount}. ` +
+      `Make sure each question has "Your Answer:" in column B and dropdown in column C.`
+    );
+  }
+
+  return answers.slice(0, expectedCount);
+}
+
+/*************** GRADE ANSWERS ***************/
+function gradeAnswers_(sectionName, studentAnswers, answerKey) {
+  let correct = 0;
+  const missesByConcept = {};
+  const missedQuestions = [];
+
+  for (let q = 1; q <= answerKey.total; q++) {
+    const student = (studentAnswers[q - 1] || "").toUpperCase();
+    const key = (answerKey.keyByQ[q] || "").toUpperCase();
+
+    const isCorrect = student && key && student === key;
+    if (isCorrect) {
+      correct++;
+    } else {
+      const mapKey = `${sectionName}_${q}`;
+      const concept = QUESTION_CONCEPT_MAP[mapKey] || "Unmapped";
+      missesByConcept[concept] = (missesByConcept[concept] || 0) + 1;
+      missedQuestions.push({ q, student: student || "—", key, concept });
+    }
+  }
+
+  const total = answerKey.total;
+  const percent = Math.round((correct / total) * 100);
+
+  return { correct, total, percent, missesByConcept, missedQuestions };
+}
+
+/*************** WRITE SECTION SCORE TO RESULTS ***************/
+function writeSectionScoreToResults_(results, sectionName, graded) {
+  const cell = (
+    sectionName === "MCQ_PRE" ? RESULTS_CELLS.preCard :
+    sectionName === "MCQ_MID" ? RESULTS_CELLS.midCard :
+    RESULTS_CELLS.postCard
+  );
+
+  const max = graded.total;
+  const raw = `${graded.correct} / ${max}`;
+  const pct = `${graded.percent}%`;
+
+  results.getRange(cell).setValue(`${raw}  (${pct})`);
+}
+
+/*************** UPDATE OVERALL + CONCEPT MASTERY ***************/
+function updateOverallAndConcepts_(ss) {
+  const results = ss.getSheetByName("RESULTS");
+  const keySheet = ss.getSheetByName("ANSWER_KEY");
+  const pre = getLatestSectionScore_(ss, "MCQ_PRE");
+  const mid = getLatestSectionScore_(ss, "MCQ_MID");
+  const post = getLatestSectionScore_(ss, "MCQ_POST");
+
+  // Weighted overall (if a section missing, weight is ignored for now)
+  const parts = [];
+  let weightSum = 0;
+
+  if (pre) { parts.push(pre.percent * WEIGHTS.PRE); weightSum += WEIGHTS.PRE; }
+  if (mid) { parts.push(mid.percent * WEIGHTS.MID); weightSum += WEIGHTS.MID; }
+  if (post) { parts.push(post.percent * WEIGHTS.POST); weightSum += WEIGHTS.POST; }
+
+  const overall = weightSum > 0 ? Math.round(parts.reduce((a,b)=>a+b,0) / weightSum) : 0;
+  results.getRange(RESULTS_CELLS.overallCard).setValue(weightSum > 0 ? `${overall}%` : "— %");
+
+  // Aggregate concept misses across all graded sections
+  const conceptMisses = aggregateConceptMisses_(ss);
+
+  // Write concept mastery statuses (✔ Strong / ⚠ Review)
+  const start = RESULTS_CELLS.conceptStartRow;
+  for (let i = 0; i < 30; i++) {
+    const nameCell = `${RESULTS_CELLS.conceptNameCol}${start + i}`;
+    const statusCell = `${RESULTS_CELLS.conceptStatusCol}${start + i}`;
+
+    const conceptName = String(results.getRange(nameCell).getValue()).trim();
+    if (!conceptName) break;
+
+    const misses = conceptMisses[conceptName] || 0;
+
+    // Rule: 0–1 misses => Strong; 2+ => Review
+    const status = (misses >= 2) ? "⚠ Review" : "✔ Strong";
+    results.getRange(statusCell).setValue(status);
+  }
+
+  // Status line stays placeholder until finalize step
+  // results.getRange(RESULTS_CELLS.status).setValue("STATUS: —");
+}
+function tierMin_(a, b) {
+  const rank = { GOLD: 3, SILVER: 2, BRONZE: 1 };
+  return rank[a] <= rank[b] ? a : b;
+}
+/*************** LATEST SCORE LOOKUP (from SYSTEM_LOG) ***************/
+function getLatestSectionScore_(ss, sectionName) {
+  const log = ensureLogSheet_(ss);
+  const data = log.getDataRange().getValues();
+  // Columns: timestamp, email, action, correct, total, percent
+  for (let i = data.length - 1; i >= 1; i--) {
+    if (String(data[i][2]) === sectionName) {
+      return {
+        correct: Number(data[i][3]),
+        total: Number(data[i][4]),
+        percent: Number(data[i][5])
+      };
+    }
+  }
+  return null;
+}
+
+/*************** CONCEPT MISS AGGREGATION ***************/
+function aggregateConceptMisses_(ss) {
+  const log = ensureLogSheet_(ss);
+  const data = log.getDataRange().getValues();
+
+  // We store misses summary JSON in column G (index 6)
+  const conceptMisses = {};
+
+  for (let i = 1; i < data.length; i++) {
+    const action = String(data[i][2]);
+    if (action !== "MCQ_PRE" && action !== "MCQ_MID" && action !== "MCQ_POST") continue;
+
+    const json = String(data[i][6] || "").trim();
+    if (!json) continue;
+
+    try {
+      const obj = JSON.parse(json);
+      Object.keys(obj).forEach(k => {
+        conceptMisses[k] = (conceptMisses[k] || 0) + Number(obj[k] || 0);
+      });
+    } catch (e) {
+      // ignore malformed rows
+    }
+  }
+
+  return conceptMisses;
+}
+
+/*************** LOGGING ***************/
+function ensureLogSheet_(ss) {
+  let log = ss.getSheetByName("SYSTEM_LOG");
+  if (!log) {
+    log = ss.insertSheet("SYSTEM_LOG");
+    log.appendRow(["Timestamp", "Email", "Action", "Correct", "Total", "Percent", "MissesByConceptJSON"]);
+  }
+  return log;
+}
+
+function logAttempt_(ss, email, action, graded) {
+  const log = ensureLogSheet_(ss);
+  log.appendRow([
+    new Date(),
+    email,
+    action,
+    graded.correct,
+    graded.total,
+    graded.percent,
+    JSON.stringify(graded.missesByConcept || {})
+  ]);
+}
+function computeSIMQuality_(sim) {
+  const base = [
+    Number(sim.getRange("G30").getValue()),
+    Number(sim.getRange("G31").getValue()),
+    Number(sim.getRange("G32").getValue()),
+    Number(sim.getRange("G33").getValue())
+  ];
+
+  if (base.some(isNaN)) return null;
+
+  const avg = Math.round(base.reduce((a,b)=>a+b,0) / base.length);
+
+  if (avg >= 85) return { score: avg, tier: "STRONG" };
+  if (avg >= 70) return { score: avg, tier: "STABLE" };
+  return { score: avg, tier: "FRAGILE" };
+}
+
+function finalizeResults() {
+  const ss = SpreadsheetApp.getActive();
+  const results = ss.getSheetByName("RESULTS");
+  const sim = ss.getSheetByName("SIM");
+
+  const email = getStudentEmail_();
+
+  // ----- SHOCK CHECK -----
+  if (String(sim.getRange("E29").getValue()).trim() !== "SHOCK_APPLIED") {
+    SpreadsheetApp.getUi().alert(
+      "Shock Required",
+      "Please run and resolve the market shock before finalizing results.",
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+    return;
+  }
+
+  // ----- MCQ CHECK (LOG-BASED, AUTHORITATIVE) -----
+  const pre = getLatestSectionScore_(ss, "MCQ_PRE");
+  const mid = getLatestSectionScore_(ss, "MCQ_MID");
+  const post = getLatestSectionScore_(ss, "MCQ_POST");
+
+  if (!pre || !mid || !post) {
+    SpreadsheetApp.getUi().alert(
+      "MCQs Not Graded",
+      "Please grade all MCQ sections before finalizing results.",
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+    return;
+  }
+
+  const overallPct = Math.round(
+    (pre.percent * WEIGHTS.PRE +
+     mid.percent * WEIGHTS.MID +
+     post.percent * WEIGHTS.POST) /
+    (WEIGHTS.PRE + WEIGHTS.MID + WEIGHTS.POST)
+  );
+
+  results.getRange(RESULTS_CELLS.overallCard).setValue(`${overallPct}%`);
+
+  // ----- SIM QUALITY -----
+  const simQuality = computeSIMQuality_(sim);
+  if (!simQuality) {
+    results.getRange(RESULTS_CELLS.status).setValue("STATUS: REVIEW REQUIRED");
+    results.getRange(RESULTS_CELLS.causeBox)
+      .setValue("Simulation baseline missing. Re-run SIM.");
+    return;
+  }
+
+  const orders = Number(sim.getRange("E30").getValue());
+  const partners = Number(sim.getRange("E31").getValue());
+  const drivers = Number(sim.getRange("E32").getValue());
+  const platform = Number(sim.getRange("E33").getValue());
+
+  const shockAvg = Math.round((orders + partners + drivers + platform) / 4);
+
+  // ----- PASS / FAIL -----
+  let pass = true;
+  let reason = "";
+
+  if (overallPct < 65) {
+    pass = false;
+    reason = "Overall MCQ score below passing threshold.";
+  } else if (simQuality.tier === "FRAGILE") {
+    pass = false;
+    reason = "Simulation created an unstable system.";
+  } else if (orders < 60 || partners < 60 || drivers < 60) {
+    pass = false;
+    reason = "System failed under market shock.";
+  }
+
+  if (!pass) {
+    results.getRange(RESULTS_CELLS.status).setValue("STATUS: REVIEW REQUIRED");
+    results.getRange(RESULTS_CELLS.causeBox)
+      .setValue(reason);
+    sendFailEmail_(email, reason, "");
+    SpreadsheetApp.getUi().alert(
+  "Review Required",
+  reason,
+  SpreadsheetApp.getUi().ButtonSet.OK
+);
+
+    return;
+  }
+
+  const mcqTier = overallPct >= 90 ? "GOLD" : overallPct >= 75 ? "SILVER" : "BRONZE";
+  const shockTier = shockAvg >= 85 ? "GOLD" : shockAvg >= 70 ? "SILVER" : "BRONZE";
+  const finalTier = tierMin_(mcqTier, shockTier);
+
+  results.getRange(RESULTS_CELLS.status)
+    .setValue(`STATUS: PASS — ${finalTier}`);
+
+  results.getRange(RESULTS_CELLS.causeBox)
+    .setValue(
+      `MCQ Mastery: ${overallPct}%\n` +
+      `Simulation Quality: ${simQuality.tier} (${simQuality.score})\n` +
+      `Shock Resilience: ${shockAvg}\n`
+    );
+
+  const claimCode = generateClaimCode_(finalTier);
+  sendPassEmail_(email, claimCode);
+
+  SpreadsheetApp.getUi().alert(
+    "Module Passed",
+    `Congratulations! You passed Module 2 (${finalTier}).`,
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
+
+/*************** FAILURE EMAIL *****************/
+function sendFailEmail_(to, reason, shockSummary) {
+  const subject = "Module 2 — Review Required";
+
+  const html = `
+  <div style="
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial;
+    background:#0b0f1a;
+    padding:40px;
+    color:#ffffff;
+  ">
+    <div style="
+      max-width:640px;
+      margin:auto;
+      background:#111827;
+      border-radius:16px;
+      padding:36px;
+      box-shadow:0 25px 50px rgba(0,0,0,0.45);
+    ">
+
+      <div style="
+        font-size:12px;
+        letter-spacing:0.15em;
+        color:#9ca3af;
+        margin-bottom:14px;
+      ">
+        BOW SPORTS CAPITAL · MODULE 2
+      </div>
+
+      <h1 style="
+        font-size:28px;
+        font-weight:700;
+        margin:0 0 10px 0;
+        color:#ffffff;
+      ">
+        Review Required
+      </h1>
+
+      <div style="
+        font-size:16px;
+        color:#93c5fd;
+        margin-bottom:26px;
+      ">
+        Economic Decision-Making Evaluation
+      </div>
+
+      <p style="font-size:16px;line-height:1.6;color:#e5e7eb;">
+        Your Module 2 submission did not meet the passing criteria for this attempt.
+      </p>
+
+      <div style="
+        margin:22px 0;
+        padding:18px;
+        background:#020617;
+        border-radius:12px;
+      ">
+        <strong>Primary Reason:</strong><br/>
+        ${reason}
+      </div>
+
+      ${shockSummary ? `
+      <div style="
+        margin-top:18px;
+        padding:18px;
+        background:#020617;
+        border-radius:12px;
+      ">
+        <strong>Market Shock Feedback:</strong><br/>
+        ${shockSummary}
+      </div>
+      ` : ""}
+
+      <p style="font-size:15px;color:#e5e7eb;margin-top:22px;">
+        Review your RESULTS dashboard to understand where improvement is needed.
+        You may revise and reattempt where allowed.
+      </p>
+
+      <div style="
+        margin-top:30px;
+        padding-top:18px;
+        border-top:1px solid #1f2937;
+        font-size:13px;
+        color:#9ca3af;
+      ">
+        This evaluation was generated automatically by the BOW Simulation Engine.
+      </div>
+
+    </div>
+  </div>
+  `;
+
+  MailApp.sendEmail({
+    to,
+    subject,
+    htmlBody: html
+  });
+}
+
+/*************** SHOCK EXPLANATION *****************/
+function buildShockExplanation_(orders, partners, platform) {
+  const parts = [];
+
+  if (orders < 70) {
+    parts.push(
+      "Customer demand declined under higher costs, indicating sensitivity to price or service changes."
+    );
+  } else if (orders >= 85) {
+    parts.push(
+      "Customer demand remained strong, suggesting your system absorbed the cost increase well."
+    );
+  }
+
+  if (partners < 70) {
+    parts.push(
+      "Partner stability weakened, showing that some suppliers or partners were negatively affected by the response."
+    );
+  } else if (partners >= 85) {
+    parts.push(
+      "Partners remained stable, indicating a sustainable revenue-sharing structure."
+    );
+  }
+
+  if (platform < 70) {
+    parts.push(
+      "Platform health declined, suggesting profit pressure or operational strain."
+    );
+  } else if (platform >= 85) {
+    parts.push(
+      "Platform health remained strong, showing resilience under market pressure."
+    );
+  }
+
+  if (parts.length === 0) {
+    return "The system responded moderately to the market shock with mixed outcomes.";
+  }
+
+  return parts.join(" ");
+}
+/***************************************************
+ * MODULE 2 — SIM ENGINE
+ * Writes SIM outcomes to OUTCOMES block
+ ***************************************************/
+function runSIM() {
+  const ss = SpreadsheetApp.getActive();
+  const sim = ss.getSheetByName("SIM");
+  if (!sim) throw new Error('Missing "SIM" sheet.');
+
+  // Prevent re-run
+  const lockCell = sim.getRange("E28").getValue();
+  if (lockCell === "SIM_COMPLETE") {
+    SpreadsheetApp.getUi().alert(
+      "SIM Locked",
+      "The SIM build has already been finalized.",
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+    return;
+  }
+
+  // Read decisions (CHANGE CELLS IF NEEDED)
+  const d1 = String(sim.getRange("C9").getValue()).trim();
+  const d2 = String(sim.getRange("C13").getValue()).trim();
+  const d3 = String(sim.getRange("C17").getValue()).trim();
+  const d4 = String(sim.getRange("C21").getValue()).trim();
+
+  if (!d1 || !d2 || !d3 || !d4) {
+    SpreadsheetApp.getUi().alert(
+      "Incomplete Build",
+      "Please complete all four SIM decisions before running the build.",
+      SpreadsheetApp.getUi().ButtonSet.OK
+    );
+    return;
+  }
+
+  // Base scores
+  let orders = 70;
+  let restaurants = 70;
+  let drivers = 70;
+  let competition = 70;
+
+  // DECISION 1 — Revenue Generation
+if (d1 === "Charge customers a delivery fee") {
+  orders -= 10;
+  competition += 5;
+}
+
+if (d1 === "Take a commission from restaurants") {
+  restaurants -= 15;
+  drivers -= 5;
+}
+
+if (d1 === "Offer monthly subscriptions") {
+  orders += 10;
+  competition += 5;
+}
+// DECISION 2 — Market Size
+if (d2 === "Operate in one large city") {
+  orders += 5;
+  competition -= 5;
+}
+
+if (d2 === "Operate in many small towns") {
+  orders += 10;
+  drivers -= 5;
+}
+// DECISION 3 — Revenue Sharing
+if (d3 === "Platform keeps a larger share") {
+  restaurants -= 10;
+  drivers -= 10;
+}
+
+if (d3 === "Platform and partners split evenly") {
+  competition += 5;
+}
+
+if (d3 === "Partners keep a larger share") {
+  restaurants += 10;
+  drivers += 10;
+}
+// DECISION 4 — Competitive Balance
+if (d4 === "Lower fees for small businesses") {
+  competition += 15;
+  orders += 5;
+}
+
+if (d4 === "Same rules for all businesses") {
+  competition += 5;
+}
+
+if (d4 === "Special deals for large chains") {
+  competition -= 15;
+  restaurants -= 10;
+}
+
+  // Clamp values 0–100
+  function clamp(n) { return Math.max(0, Math.min(100, n)); }
+
+  orders = clamp(orders);
+  restaurants = clamp(restaurants);
+  drivers = clamp(drivers);
+  competition = clamp(competition);
+
+  // Write outcomes
+  sim.getRange("E30").setValue(orders);
+  sim.getRange("E31").setValue(restaurants);
+  sim.getRange("E32").setValue(drivers);
+  sim.getRange("E33").setValue(competition);
+// Snapshot baseline SIM results (pre-shock)
+sim.getRange("G30").setValue(orders);
+sim.getRange("G31").setValue(restaurants);
+sim.getRange("G32").setValue(drivers);
+sim.getRange("G33").setValue(competition);
+sim.getRange("G36").setValue("BASELINE");
+
+  // System Health Score
+  const systemHealth = Math.round(
+    (orders + restaurants + drivers + competition) / 4
+  );
+  sim.getRange("E35").setValue(systemHealth);
+
+  // Fail logic (educational, not punitive)
+  let failReason = "";
+  if (drivers < 50) failReason = "Drivers quit (pay/incentives)";
+  if (restaurants < 50) failReason = "Restaurants leave platform";
+  if (competition < 50) failReason = "Market becomes unbalanced";
+
+  sim.getRange("E36").setValue(failReason || "—");
+
+  // Lock SIM
+  sim.getRange("E28").setValue("SIM_COMPLETE");
+
+  SpreadsheetApp.getUi().alert(
+    "SIM Build Complete",
+    "System outcomes have been calculated. You may now proceed to the Market Shock.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
