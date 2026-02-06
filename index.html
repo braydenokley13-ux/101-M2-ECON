@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeliverEmpire - Economics Tycoon</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>DeliverEmpire - Build Your Food Delivery Dynasty!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a0a1a;
-            --bg-card: #12122a;
-            --bg-lighter: #1a1a3a;
-            --accent-primary: #6366f1;
-            --accent-secondary: #8b5cf6;
-            --accent-success: #10b981;
-            --accent-warning: #f59e0b;
-            --accent-danger: #ef4444;
-            --accent-cyan: #06b6d4;
-            --text-primary: #ffffff;
-            --text-secondary: #94a3b8;
-            --gold: #fbbf24;
-            --silver: #94a3b8;
-            --bronze: #d97706;
+            --bg-dark: #1a1b2e;
+            --bg-card: #252642;
+            --bg-lighter: #2d2e4a;
+            --accent-blue: #4f8cff;
+            --accent-purple: #9d4edd;
+            --accent-green: #00d26a;
+            --accent-yellow: #ffd93d;
+            --accent-orange: #ff6b35;
+            --accent-red: #ff4757;
+            --accent-pink: #ff6b9d;
+            --accent-cyan: #00d4ff;
+            --text-white: #ffffff;
+            --text-light: #b8b9d0;
         }
 
         * {
@@ -30,2080 +29,2328 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Nunito', sans-serif;
             background: var(--bg-dark);
-            color: var(--text-primary);
+            color: var(--text-white);
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Animated background */
-        .bg-animation {
+        /* Fun animated background */
+        .bg-fun {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             z-index: -1;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+            background: linear-gradient(135deg, #1a1b2e 0%, #2d1f4e 50%, #1a1b2e 100%);
+            overflow: hidden;
         }
 
-        .bg-animation::before {
-            content: '';
+        .floating-item {
             position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.05) 0%, transparent 30%);
-            animation: bgMove 20s linear infinite;
+            font-size: 2rem;
+            opacity: 0.15;
+            animation: floatAround 25s infinite linear;
+            pointer-events: none;
         }
 
-        @keyframes bgMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-50%, -50%); }
+        @keyframes floatAround {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(720deg); }
         }
 
-        /* Main container */
-        .game-container {
+        /* Game container */
+        .game-wrap {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-            position: relative;
+            padding: 15px;
         }
 
         /* Header */
         .game-header {
-            text-align: center;
-            padding: 40px 20px;
-            position: relative;
-        }
-
-        .game-logo {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 40px rgba(99, 102, 241, 0.5);
-            margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.5)); }
-            to { filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.7)); }
-        }
-
-        .game-tagline {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        /* Stats bar */
-        .stats-bar {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            border-radius: 20px;
+            padding: 15px 25px;
+            margin-bottom: 15px;
             display: flex;
-            justify-content: center;
-            gap: 30px;
+            justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
-            margin: 30px 0;
-            padding: 20px;
-            background: var(--bg-card);
-            border-radius: 16px;
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            gap: 15px;
+            box-shadow: 0 10px 40px rgba(79, 140, 255, 0.3);
         }
 
-        .stat-item {
-            text-align: center;
-            min-width: 100px;
+        .logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: white;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 5px;
+        .logo-icon {
+            font-size: 2.2rem;
+            animation: bounce 2s infinite;
         }
 
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent-primary);
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .stats-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        /* Screen container */
-        .screen {
-            display: none;
-            animation: fadeIn 0.5s ease;
+        .stat-bubble {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
         }
 
-        .screen.active {
-            display: block;
+        .stat-bubble-icon {
+            font-size: 1.3rem;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Main layout */
+        .game-body {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 15px;
+        }
+
+        @media (max-width: 900px) {
+            .game-body { grid-template-columns: 1fr; }
         }
 
         /* Cards */
         .card {
             background: var(--bg-card);
             border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 3px solid transparent;
             transition: all 0.3s ease;
         }
 
         .card:hover {
-            border-color: rgba(99, 102, 241, 0.5);
-            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.1);
+            border-color: var(--accent-blue);
         }
 
         .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .card-description {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 20px;
+        /* City Map - Make it look like a game board */
+        .city-map {
+            height: 280px;
+            background: linear-gradient(180deg, #1a3a5c 0%, #0d1f33 100%);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid var(--accent-blue);
+        }
+
+        .map-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(79, 140, 255, 0.1) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(79, 140, 255, 0.1) 2px, transparent 2px);
+            background-size: 40px 40px;
+        }
+
+        .zone {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 4px solid rgba(255,255,255,0.3);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .zone:hover {
+            transform: scale(1.15);
+            z-index: 10;
+        }
+
+        .zone.unlocked {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px currentColor; }
+            50% { box-shadow: 0 0 25px currentColor, 0 0 40px currentColor; }
+        }
+
+        .zone.locked {
+            filter: grayscale(1) brightness(0.5);
+            cursor: not-allowed;
+        }
+
+        .zone.locked:hover {
+            transform: scale(1);
+        }
+
+        .zone-center {
+            width: 80px; height: 80px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            font-size: 2rem;
+            color: var(--accent-purple);
+        }
+
+        .zone-mid {
+            width: 55px; height: 55px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+        }
+
+        .zone-outer {
+            width: 45px; height: 45px;
+            background: linear-gradient(135deg, var(--accent-green), #00b359);
+            font-size: 1.3rem;
+            color: var(--accent-green);
+        }
+
+        .zone-north { top: 12%; left: 50%; transform: translateX(-50%); }
+        .zone-east { top: 50%; right: 12%; transform: translateY(-50%); }
+        .zone-south { bottom: 12%; left: 50%; transform: translateX(-50%); }
+        .zone-west { top: 50%; left: 12%; transform: translateY(-50%); }
+        .zone-ne { top: 18%; right: 18%; }
+        .zone-se { bottom: 18%; right: 18%; }
+        .zone-sw { bottom: 18%; left: 18%; }
+        .zone-nw { top: 18%; left: 18%; }
+
+        .map-tip {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        /* Score meters */
+        .meters-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .meter-card {
+            background: var(--bg-lighter);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .meter-emoji {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .meter-value {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2rem;
+        }
+
+        .meter-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .meter-bar {
+            height: 8px;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .meter-orders .meter-value { color: var(--accent-cyan); }
+        .meter-orders .meter-fill { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue)); }
+
+        .meter-partners .meter-value { color: var(--accent-green); }
+        .meter-partners .meter-fill { background: linear-gradient(90deg, var(--accent-green), #00ff88); }
+
+        .meter-drivers .meter-value { color: var(--accent-yellow); }
+        .meter-drivers .meter-fill { background: linear-gradient(90deg, var(--accent-yellow), var(--accent-orange)); }
+
+        .meter-health .meter-value { color: var(--accent-purple); }
+        .meter-health .meter-fill { background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink)); }
+
+        /* Character/Coach */
+        .coach-box {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .coach-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-yellow), var(--accent-orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            flex-shrink: 0;
+            border: 4px solid var(--accent-yellow);
+            box-shadow: 0 5px 20px rgba(255, 217, 61, 0.3);
+        }
+
+        .coach-bubble {
+            flex: 1;
+            background: var(--bg-lighter);
+            border-radius: 20px;
+            padding: 15px 20px;
+            position: relative;
+            border: 2px solid var(--accent-yellow);
+        }
+
+        .coach-bubble::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 20px;
+            border: 12px solid transparent;
+            border-right-color: var(--accent-yellow);
+        }
+
+        .coach-name {
+            font-family: 'Fredoka One', cursive;
+            color: var(--accent-yellow);
+            margin-bottom: 5px;
+        }
+
+        .coach-text {
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .coach-text strong {
+            color: var(--text-white);
+        }
+
+        .coach-text .highlight {
+            color: var(--accent-cyan);
+            font-weight: 700;
         }
 
         /* Buttons */
         .btn {
             padding: 15px 30px;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-go {
+            background: linear-gradient(135deg, var(--accent-green), #00b359);
             color: white;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 6px 0 #008040, 0 10px 20px rgba(0, 210, 106, 0.3);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6);
+        .btn-go:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 #008040, 0 15px 30px rgba(0, 210, 106, 0.4);
         }
 
-        .btn-secondary {
-            background: var(--bg-lighter);
-            color: var(--text-primary);
-            border: 2px solid var(--accent-primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--accent-primary);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--accent-success), #059669);
+        .btn-action {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             color: white;
+            box-shadow: 0 6px 0 #3a6cd4, 0 10px 20px rgba(79, 140, 255, 0.3);
         }
 
-        .btn-warning {
-            background: linear-gradient(135deg, var(--accent-warning), #d97706);
-            color: white;
+        .btn-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 #3a6cd4, 0 15px 30px rgba(79, 140, 255, 0.4);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, var(--accent-danger), #dc2626);
+            background: linear-gradient(135deg, var(--accent-red), #d63447);
             color: white;
+            box-shadow: 0 6px 0 #c0392b, 0 10px 20px rgba(255, 71, 87, 0.3);
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 0.9rem;
         }
 
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
+            box-shadow: none !important;
         }
 
-        /* Decision cards */
-        .decision-grid {
+        /* Choice cards */
+        .choices-grid {
             display: grid;
+            gap: 12px;
+        }
+
+        .choice-card {
+            background: var(--bg-lighter);
+            border: 3px solid transparent;
+            border-radius: 15px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
             gap: 15px;
         }
 
-        .decision-option {
-            background: var(--bg-lighter);
-            border: 2px solid transparent;
-            border-radius: 16px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .decision-option:hover {
-            border-color: var(--accent-primary);
+        .choice-card:hover {
+            border-color: var(--accent-blue);
             transform: translateX(5px);
         }
 
-        .decision-option.selected {
-            border-color: var(--accent-success);
-            background: rgba(16, 185, 129, 0.1);
+        .choice-card.selected {
+            border-color: var(--accent-green);
+            background: rgba(0, 210, 106, 0.1);
         }
 
-        .decision-option.correct {
-            border-color: var(--accent-success);
-            background: rgba(16, 185, 129, 0.2);
+        .choice-card.correct {
+            border-color: var(--accent-green);
+            background: rgba(0, 210, 106, 0.2);
+            animation: correctPop 0.5s ease;
         }
 
-        .decision-option.incorrect {
-            border-color: var(--accent-danger);
-            background: rgba(239, 68, 68, 0.2);
+        .choice-card.wrong {
+            border-color: var(--accent-red);
+            background: rgba(255, 71, 87, 0.2);
+            animation: wrongShake 0.5s ease;
         }
 
-        .decision-title {
-            font-weight: 700;
-            margin-bottom: 5px;
+        @keyframes correctPop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .choice-icon {
+            font-size: 2rem;
+            width: 50px;
+            text-align: center;
+        }
+
+        .choice-content {
+            flex: 1;
+        }
+
+        .choice-title {
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+
+        .choice-desc {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Side panel */
+        .side-panel {
             display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Power-ups / Upgrades */
+        .powerup {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-lighter);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .powerup:hover {
+            border-color: var(--accent-yellow);
+        }
+
+        .powerup.owned {
+            opacity: 0.5;
+            border-color: var(--accent-green);
+        }
+
+        .powerup-icon {
+            font-size: 1.8rem;
+        }
+
+        .powerup-info {
+            flex: 1;
+        }
+
+        .powerup-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .powerup-desc {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .powerup-cost {
+            font-family: 'Fredoka One', cursive;
+            color: var(--accent-yellow);
+        }
+
+        /* Reviews - Fun style */
+        .review {
+            background: var(--bg-lighter);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .review-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .review-name {
+            font-weight: 700;
+        }
+
+        .review-stars {
+            color: var(--accent-yellow);
+        }
+
+        .review-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* News ticker */
+        .news-ticker {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 10px 20px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .ticker-scroll {
+            display: flex;
+            animation: tickerScroll 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            margin-right: 50px;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
         }
 
-        .decision-impact {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        /* Progress bars */
-        .progress-container {
-            margin: 20px 0;
-        }
-
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .progress-bar {
-            height: 12px;
-            background: var(--bg-lighter);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 0.5s ease;
-            position: relative;
-        }
-
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .progress-orders { background: linear-gradient(90deg, var(--accent-cyan), #0891b2); }
-        .progress-partners { background: linear-gradient(90deg, var(--accent-success), #059669); }
-        .progress-drivers { background: linear-gradient(90deg, var(--accent-warning), #d97706); }
-        .progress-platform { background: linear-gradient(90deg, var(--accent-secondary), #7c3aed); }
-
-        /* Intro screen */
-        #intro-screen .hero {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .hero-emoji {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 15px;
-            background: linear-gradient(135deg, #fff, var(--accent-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 30px;
-            line-height: 1.6;
-        }
-
-        /* Story panels */
-        .story-panel {
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-lighter));
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-        }
-
-        .story-character {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-
-        .story-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 25px;
-        }
-
-        .story-text strong {
-            color: var(--text-primary);
-        }
-
-        .story-highlight {
-            color: var(--accent-cyan);
-            font-weight: 600;
-        }
-
-        /* Quiz mode */
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
+        /* Modals */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            justify-content: center;
+            padding: 20px;
         }
 
-        .quiz-progress {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+        .modal-bg.show {
+            display: flex;
         }
 
-        .quiz-timer {
-            background: var(--bg-lighter);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
+        .modal {
+            background: var(--bg-card);
+            border-radius: 25px;
+            max-width: 650px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            border: 4px solid var(--accent-purple);
+            animation: modalPop 0.3s ease;
         }
 
-        .quiz-question {
-            font-size: 1.3rem;
-            font-weight: 600;
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-head {
+            text-align: center;
             margin-bottom: 25px;
-            line-height: 1.5;
         }
 
-        .quiz-concept {
+        .modal-emoji {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            animation: bounce 1s infinite;
+        }
+
+        .modal-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .modal-sub {
+            color: var(--text-light);
+        }
+
+        /* Quiz styling */
+        .quiz-badge {
             display: inline-block;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 0.8rem;
             margin-bottom: 15px;
         }
 
+        .quiz-q {
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .quiz-tip {
+            background: rgba(79, 140, 255, 0.1);
+            border: 2px dashed var(--accent-blue);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .quiz-tip-title {
+            font-weight: 800;
+            color: var(--accent-cyan);
+            margin-bottom: 5px;
+        }
+
         /* Crisis mode */
-        .crisis-banner {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(245, 158, 11, 0.2));
-            border: 2px solid var(--accent-danger);
-            border-radius: 16px;
-            padding: 25px;
+        .crisis-mode .game-header {
+            animation: crisisFlash 1s infinite;
+        }
+
+        @keyframes crisisFlash {
+            0%, 100% { border-color: var(--accent-red); }
+            50% { border-color: var(--accent-orange); }
+        }
+
+        .crisis-alert {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.2), rgba(255, 107, 53, 0.2));
+            border: 3px solid var(--accent-red);
+            border-radius: 15px;
+            padding: 15px;
             text-align: center;
-            margin-bottom: 25px;
-            animation: pulse 2s ease-in-out infinite;
+            margin-bottom: 15px;
+            animation: crisisShake 0.5s ease infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            50% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+        @keyframes crisisShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
         }
 
-        .crisis-icon {
+        .crisis-title {
+            font-family: 'Fredoka One', cursive;
+            color: var(--accent-red);
+            font-size: 1.3rem;
+        }
+
+        /* Mini game */
+        .game-arena {
+            height: 280px;
+            background: linear-gradient(180deg, #1a2a4a, #0d1a2e);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid var(--accent-cyan);
+        }
+
+        .game-target {
+            position: absolute;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            animation: targetAppear 0.2s ease;
+            transition: transform 0.1s;
+        }
+
+        .game-target:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes targetAppear {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        .game-target.good {
+            background: linear-gradient(135deg, var(--accent-green), #00b359);
+            box-shadow: 0 0 20px rgba(0, 210, 106, 0.5);
+        }
+
+        .game-target.bad {
+            background: linear-gradient(135deg, var(--accent-red), #d63447);
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+        }
+
+        .game-hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .game-hud-item {
+            background: rgba(0,0,0,0.7);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        /* Achievement popup */
+        .achieve-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-lighter));
+            border: 3px solid var(--accent-yellow);
+            border-radius: 20px;
+            padding: 15px 20px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            z-index: 2000;
+            animation: achieveSlide 0.5s ease;
+            box-shadow: 0 10px 40px rgba(255, 217, 61, 0.4);
+        }
+
+        .achieve-popup.show {
+            display: flex;
+        }
+
+        @keyframes achieveSlide {
+            0% { transform: translateX(120%); }
+            100% { transform: translateX(0); }
+        }
+
+        .achieve-icon {
+            font-size: 2.5rem;
+        }
+
+        .achieve-info h4 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--accent-yellow);
+        }
+
+        .achieve-info p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Floating effects */
+        .float-effect {
+            position: fixed;
+            font-size: 1.5rem;
+            font-family: 'Fredoka One', cursive;
+            pointer-events: none;
+            animation: floatUp 1.2s ease-out forwards;
+            z-index: 3000;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+        }
+
+        .float-xp { color: var(--accent-yellow); }
+        .float-good { color: var(--accent-green); }
+        .float-bad { color: var(--accent-red); }
+
+        /* Screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Intro screen */
+        .intro {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .intro-logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--accent-yellow), var(--accent-orange), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            animation: logoGlow 2s infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 217, 61, 0.5)); }
+            100% { filter: drop-shadow(0 0 30px rgba(255, 107, 157, 0.5)); }
+        }
+
+        .intro-sub {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            max-width: 550px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .intro-features {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 35px;
+        }
+
+        .intro-feat {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 25px;
+            width: 180px;
+            border: 3px solid var(--bg-lighter);
+            transition: all 0.3s ease;
+        }
+
+        .intro-feat:hover {
+            border-color: var(--accent-purple);
+            transform: translateY(-5px);
+        }
+
+        .intro-feat-icon {
             font-size: 3rem;
             margin-bottom: 10px;
         }
 
-        .crisis-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent-danger);
-            margin-bottom: 10px;
+        .intro-feat-title {
+            font-family: 'Fredoka One', cursive;
+            margin-bottom: 5px;
         }
 
-        .crisis-description {
-            color: var(--text-secondary);
+        .intro-feat-desc {
+            font-size: 0.8rem;
+            color: var(--text-light);
         }
 
         /* Results */
-        .result-card {
+        .results {
             text-align: center;
-            padding: 40px;
+            padding: 40px 20px;
         }
 
         .result-badge {
             width: 150px;
             height: 150px;
-            margin: 0 auto 25px;
+            margin: 0 auto 20px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 4rem;
-            position: relative;
+            animation: badgeSpin 1s ease;
+        }
+
+        @keyframes badgeSpin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
         }
 
         .result-badge.gold {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            box-shadow: 0 0 50px rgba(251, 191, 36, 0.5);
+            background: linear-gradient(135deg, #ffd93d, #f9a825);
+            box-shadow: 0 0 50px rgba(255, 217, 61, 0.6);
         }
 
         .result-badge.silver {
-            background: linear-gradient(135deg, #94a3b8, #64748b);
-            box-shadow: 0 0 50px rgba(148, 163, 184, 0.5);
+            background: linear-gradient(135deg, #b8c5d6, #8899aa);
+            box-shadow: 0 0 50px rgba(184, 197, 214, 0.6);
         }
 
         .result-badge.bronze {
             background: linear-gradient(135deg, #d97706, #b45309);
-            box-shadow: 0 0 50px rgba(217, 119, 6, 0.5);
+            box-shadow: 0 0 50px rgba(217, 119, 6, 0.6);
         }
 
-        .result-badge::before {
-            content: '';
-            position: absolute;
-            inset: -5px;
-            border-radius: 50%;
-            background: inherit;
-            filter: blur(15px);
-            opacity: 0.5;
-            z-index: -1;
-        }
-
-        .result-title {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
-        .result-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 30px;
-        }
-
-        .result-stats {
+        .result-scores {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .result-stat {
-            background: var(--bg-lighter);
-            padding: 20px;
-            border-radius: 12px;
-        }
-
-        .result-stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent-primary);
-        }
-
-        .result-stat-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        /* Achievements */
-        .achievement-unlocked {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-lighter));
-            border: 2px solid var(--accent-success);
-            border-radius: 16px;
-            padding: 20px 25px;
-            display: flex;
-            align-items: center;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 15px;
-            animation: slideIn 0.5s ease, slideOut 0.5s ease 3s forwards;
-            z-index: 1000;
-            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+            max-width: 500px;
+            margin: 25px auto;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .result-score {
+            background: var(--bg-lighter);
+            border-radius: 15px;
+            padding: 20px 15px;
         }
 
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
+        .result-score-val {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2rem;
+            color: var(--accent-cyan);
         }
 
-        .achievement-icon {
-            font-size: 2.5rem;
+        .result-score-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
         }
 
-        .achievement-text h4 {
-            color: var(--accent-success);
-            margin-bottom: 3px;
+        .claim-code {
+            background: var(--bg-lighter);
+            border: 3px solid var(--accent-yellow);
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 350px;
+            margin: 20px auto;
         }
 
-        .achievement-text p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+        .claim-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
         }
 
-        /* Concept badges */
+        .claim-value {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            color: var(--accent-yellow);
+            letter-spacing: 2px;
+        }
+
         .concept-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            max-width: 500px;
+            margin: 20px auto;
         }
 
-        .concept-badge {
-            background: var(--bg-lighter);
-            border-radius: 12px;
-            padding: 15px;
+        .concept-item {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            padding: 12px;
+            background: var(--bg-lighter);
+            border-radius: 12px;
+            font-size: 0.85rem;
         }
 
-        .concept-badge.mastered {
-            border: 2px solid var(--accent-success);
-            background: rgba(16, 185, 129, 0.1);
+        .concept-item.good {
+            border: 2px solid var(--accent-green);
         }
 
-        .concept-badge.review {
-            border: 2px solid var(--accent-warning);
-            background: rgba(245, 158, 11, 0.1);
+        .concept-item.needs-work {
+            border: 2px solid var(--accent-orange);
         }
 
-        .concept-status {
-            width: 36px;
-            height: 36px;
+        .concept-icon {
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
-        .concept-status.mastered {
-            background: var(--accent-success);
-        }
+        .concept-icon.good { background: var(--accent-green); }
+        .concept-icon.needs-work { background: var(--accent-orange); }
 
-        .concept-status.review {
-            background: var(--accent-warning);
-        }
-
-        .concept-name {
-            font-weight: 600;
+        /* Sports connection callout */
+        .sports-tip {
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(79, 140, 255, 0.2));
+            border: 2px solid var(--accent-purple);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
             font-size: 0.9rem;
         }
 
-        /* Animations */
-        .float-coin {
-            position: fixed;
-            font-size: 2rem;
-            pointer-events: none;
-            animation: floatUp 1s ease-out forwards;
-            z-index: 1000;
-        }
-
-        @keyframes floatUp {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-100px) scale(0.5); }
+        .sports-tip-head {
+            font-family: 'Fredoka One', cursive;
+            color: var(--accent-purple);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .game-logo {
-                font-size: 1.5rem;
-            }
-
-            .hero-title {
-                font-size: 1.8rem;
-            }
-
-            .stats-bar {
-                gap: 15px;
-            }
-
-            .stat-item {
-                min-width: 80px;
-            }
-
-            .card {
-                padding: 20px;
-            }
-        }
-
-        /* Phase indicator */
-        .phase-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .phase-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--bg-lighter);
-            transition: all 0.3s ease;
-        }
-
-        .phase-dot.active {
-            background: var(--accent-primary);
-            box-shadow: 0 0 10px var(--accent-primary);
-        }
-
-        .phase-dot.complete {
-            background: var(--accent-success);
-        }
-
-        /* Tooltip */
-        .tooltip {
-            position: relative;
-        }
-
-        .tooltip::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-card);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-        }
-
-        .tooltip:hover::after {
-            opacity: 1;
-        }
-
-        /* Leaderboard feel */
-        .claim-code {
-            background: linear-gradient(135deg, #1a1a3a, #0a0a1a);
-            border: 2px solid var(--gold);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .claim-code-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .claim-code-value {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 1.2rem;
-            color: var(--gold);
-            letter-spacing: 2px;
-        }
-
-        /* Mini game indicators */
-        .mini-game-preview {
-            display: flex;
-            gap: 20px;
-            margin: 30px 0;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .mini-game-card {
-            background: var(--bg-lighter);
-            border-radius: 16px;
-            padding: 25px;
-            text-align: center;
-            flex: 1;
-            min-width: 200px;
-            max-width: 280px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .mini-game-card:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-5px);
-        }
-
-        .mini-game-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-
-        .mini-game-title {
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .mini-game-desc {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+        @media (max-width: 600px) {
+            .logo { font-size: 1.3rem; }
+            .intro-logo { font-size: 2rem; }
+            .modal { padding: 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
+    <div class="bg-fun" id="bg-fun"></div>
 
-    <div class="game-container">
-        <header class="game-header">
-            <h1 class="game-logo">DeliverEmpire</h1>
-            <p class="game-tagline">Build your delivery dynasty. Master the economics.</p>
-        </header>
-
-        <!-- Stats Bar (shown during gameplay) -->
-        <div class="stats-bar" id="stats-bar" style="display: none;">
-            <div class="stat-item">
-                <div class="stat-icon">&#127829;</div>
-                <div class="stat-value" id="stat-orders">70</div>
-                <div class="stat-label">Orders</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">&#127869;</div>
-                <div class="stat-value" id="stat-partners">70</div>
-                <div class="stat-label">Partners</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">&#128666;</div>
-                <div class="stat-value" id="stat-drivers">70</div>
-                <div class="stat-label">Drivers</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">&#128200;</div>
-                <div class="stat-value" id="stat-platform">70</div>
-                <div class="stat-label">Platform</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon">&#128176;</div>
-                <div class="stat-value" id="stat-xp">0</div>
-                <div class="stat-label">XP</div>
-            </div>
-        </div>
-
-        <!-- Phase Indicator -->
-        <div class="phase-indicator" id="phase-indicator" style="display: none;">
-            <div class="phase-dot" data-phase="1"></div>
-            <div class="phase-dot" data-phase="2"></div>
-            <div class="phase-dot" data-phase="3"></div>
-            <div class="phase-dot" data-phase="4"></div>
-            <div class="phase-dot" data-phase="5"></div>
-        </div>
-
-        <!-- Intro Screen -->
-        <div class="screen active" id="intro-screen">
-            <div class="hero">
-                <div class="hero-emoji">&#128690;</div>
-                <h2 class="hero-title">Welcome, Future Tycoon!</h2>
-                <p class="hero-subtitle">
-                    You've just raised $10M to launch the next big food delivery platform.
-                    Your mission? Build an empire that balances profits, partners, and customer satisfaction.
+    <!-- INTRO SCREEN -->
+    <div class="screen active" id="intro-screen">
+        <div class="game-wrap">
+            <div class="intro">
+                <div class="intro-logo">&#128666; DeliverEmpire</div>
+                <p class="intro-sub">
+                    You just got $10 million to start your own food delivery company!
+                    Build your empire, make smart choices, and see if you have what it takes
+                    to be a business superstar! &#127775;
                 </p>
 
-                <div class="mini-game-preview">
-                    <div class="mini-game-card">
-                        <div class="mini-game-icon">&#127891;</div>
-                        <div class="mini-game-title">Learn the Game</div>
-                        <div class="mini-game-desc">Quick questions to test your business instincts</div>
+                <div class="intro-features">
+                    <div class="intro-feat">
+                        <div class="intro-feat-icon">&#127961;</div>
+                        <div class="intro-feat-title">Build</div>
+                        <div class="intro-feat-desc">Expand your delivery zones across the city!</div>
                     </div>
-                    <div class="mini-game-card">
-                        <div class="mini-game-icon">&#128736;</div>
-                        <div class="mini-game-title">Build Your Platform</div>
-                        <div class="mini-game-desc">Make strategic decisions that shape your company</div>
+                    <div class="intro-feat">
+                        <div class="intro-feat-icon">&#9889;</div>
+                        <div class="intro-feat-title">Survive</div>
+                        <div class="intro-feat-desc">Handle crazy surprises and market shocks!</div>
                     </div>
-                    <div class="mini-game-card">
-                        <div class="mini-game-icon">&#9889;</div>
-                        <div class="mini-game-title">Survive the Crisis</div>
-                        <div class="mini-game-desc">Navigate market shocks and prove your skills</div>
+                    <div class="intro-feat">
+                        <div class="intro-feat-icon">&#127942;</div>
+                        <div class="intro-feat-title">Win</div>
+                        <div class="intro-feat-desc">Earn your certification and bragging rights!</div>
                     </div>
                 </div>
 
-                <button class="btn btn-primary" onclick="startGame()">
-                    &#128640; Launch My Startup
+                <div class="sports-tip">
+                    <div class="sports-tip-head">&#127936; Sports Connection</div>
+                    Remember how sports teams have salary caps and luxury taxes?
+                    Running a delivery company has similar rules - you have to balance your money
+                    and make fair deals with everyone!
+                </div>
+
+                <button class="btn btn-go" onclick="startGame()" style="font-size: 1.3rem; padding: 20px 50px;">
+                    &#128640; LET'S GO!
                 </button>
             </div>
         </div>
+    </div>
 
-        <!-- Pre-Quiz Screen -->
-        <div class="screen" id="pre-quiz-screen">
-            <div class="story-panel">
-                <div class="story-character">&#129464;</div>
-                <p class="story-text">
-                    <strong>"Before you start making big decisions..."</strong><br><br>
-                    Your mentor Alex, a seasoned entrepreneur, leans forward.<br><br>
-                    <span class="story-highlight">"Let's see what you already know about platform economics.
-                    Don't worry - this helps us figure out where to focus your training!"</span>
-                </p>
-                <button class="btn btn-primary" onclick="startPreQuiz()">
-                    &#128161; Test My Knowledge
-                </button>
-            </div>
-        </div>
-
-        <!-- Quiz Screen -->
-        <div class="screen" id="quiz-screen">
-            <div class="card">
-                <div class="quiz-header">
-                    <span class="quiz-concept" id="quiz-concept">Economics</span>
-                    <span class="quiz-progress" id="quiz-progress">Question 1/5</span>
+    <!-- MAIN GAME SCREEN -->
+    <div class="screen" id="game-screen">
+        <div class="game-wrap">
+            <!-- Header -->
+            <div class="game-header">
+                <div class="logo">
+                    <span class="logo-icon">&#128666;</span>
+                    DeliverEmpire
                 </div>
-                <p class="quiz-question" id="quiz-question">Loading question...</p>
-                <div class="decision-grid" id="quiz-options"></div>
-                <div style="margin-top: 25px; text-align: center;">
-                    <button class="btn btn-primary" id="quiz-submit" onclick="submitQuizAnswer()" disabled>
-                        Confirm Answer
-                    </button>
+                <div class="stats-row">
+                    <div class="stat-bubble">
+                        <span class="stat-bubble-icon">&#128197;</span>
+                        Week <span id="week">1</span>
+                    </div>
+                    <div class="stat-bubble">
+                        <span class="stat-bubble-icon">&#128176;</span>
+                        $<span id="money">10M</span>
+                    </div>
+                    <div class="stat-bubble">
+                        <span class="stat-bubble-icon">&#11088;</span>
+                        <span id="xp">0</span> XP
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- SIM Intro Screen -->
-        <div class="screen" id="sim-intro-screen">
-            <div class="story-panel">
-                <div class="story-character">&#127919;</div>
-                <p class="story-text">
-                    <strong>"Alright, it's go time!"</strong><br><br>
-                    Alex claps their hands together.<br><br>
-                    <span class="story-highlight">"You're about to make the four most important decisions
-                    for your platform. Each choice affects your customers, restaurant partners,
-                    drivers, and overall business health. Choose wisely!"</span>
-                </p>
-                <button class="btn btn-primary" onclick="startSimulation()">
-                    &#128640; Build My Platform
-                </button>
-            </div>
-        </div>
-
-        <!-- SIM Decision Screen -->
-        <div class="screen" id="sim-screen">
-            <div class="card">
-                <h3 class="card-title" id="sim-decision-title">
-                    <span>&#127919;</span> Decision 1: How to Make Money
-                </h3>
-                <p class="card-description" id="sim-decision-desc">
-                    Every platform needs revenue. How will yours generate income?
-                </p>
-
-                <div class="decision-grid" id="sim-options"></div>
-
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span>Decision Progress</span>
-                        <span id="sim-progress-text">1/4</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill progress-orders" id="sim-progress-bar" style="width: 25%;"></div>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="btn btn-primary" id="sim-confirm" onclick="confirmSimDecision()" disabled>
-                        Lock In Decision
-                    </button>
+            <!-- News Ticker -->
+            <div class="news-ticker">
+                <div class="ticker-scroll" id="ticker">
+                    <span class="ticker-item">&#128240; <strong>BREAKING:</strong> New delivery startup DeliverEmpire launches today!</span>
+                    <span class="ticker-item">&#128200; Investors excited about new competition in delivery market</span>
+                    <span class="ticker-item">&#127829; Pizza orders are up 20% this month!</span>
+                    <span class="ticker-item">&#128666; More drivers joining the gig economy</span>
+                    <span class="ticker-item">&#128240; <strong>BREAKING:</strong> New delivery startup DeliverEmpire launches today!</span>
+                    <span class="ticker-item">&#128200; Investors excited about new competition in delivery market</span>
                 </div>
             </div>
-        </div>
 
-        <!-- SIM Results Screen -->
-        <div class="screen" id="sim-results-screen">
-            <div class="card">
-                <h3 class="card-title">&#128200; Your Platform is Live!</h3>
-                <p class="card-description">Here's how your decisions shaped the business:</p>
-
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span>&#127829; Customer Orders</span>
-                        <span id="result-orders">70</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill progress-orders" id="bar-orders" style="width: 70%;"></div>
-                    </div>
-                </div>
-
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span>&#127869; Restaurant Partners</span>
-                        <span id="result-partners">70</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill progress-partners" id="bar-partners" style="width: 70%;"></div>
-                    </div>
-                </div>
-
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span>&#128666; Driver Satisfaction</span>
-                        <span id="result-drivers">70</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill progress-drivers" id="bar-drivers" style="width: 70%;"></div>
-                    </div>
-                </div>
-
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span>&#128200; Platform Health</span>
-                        <span id="result-platform">70</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill progress-platform" id="bar-platform" style="width: 70%;"></div>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-warning" onclick="startCrisis()">
-                        &#9889; Brace for Market Shock
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Crisis Screen -->
-        <div class="screen" id="crisis-screen">
-            <div class="crisis-banner">
-                <div class="crisis-icon">&#9888;&#65039;</div>
-                <h3 class="crisis-title" id="crisis-title">MARKET SHOCK: Cost Surge!</h3>
-                <p class="crisis-description" id="crisis-description">
-                    Fuel prices and labor costs have spiked across the industry. Your margins are under pressure!
-                </p>
+            <!-- Crisis Alert (hidden by default) -->
+            <div class="crisis-alert" id="crisis-alert" style="display: none;">
+                <div class="crisis-title" id="crisis-title">&#9888;&#65039; ALERT!</div>
+                <div id="crisis-desc">Something big is happening!</div>
             </div>
 
-            <div class="card">
-                <h3 class="card-title">&#128161; How Will You Respond?</h3>
-                <p class="card-description">Choose one strategy to navigate this crisis:</p>
-
-                <div class="decision-grid" id="crisis-options"></div>
-
-                <div style="text-align: center; margin-top: 25px;">
-                    <button class="btn btn-danger" id="crisis-confirm" onclick="confirmCrisisResponse()" disabled>
-                        Execute Strategy
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Crisis Results Screen -->
-        <div class="screen" id="crisis-results-screen">
-            <div class="card">
-                <h3 class="card-title">&#128202; Post-Crisis Analysis</h3>
-                <p class="card-description" id="crisis-feedback">Your platform weathered the storm!</p>
-
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span>&#127829; Customer Orders</span>
-                        <span id="post-orders">70</span>
+            <div class="game-body">
+                <!-- Main Panel -->
+                <div class="main-panel">
+                    <!-- City Map -->
+                    <div class="card">
+                        <div class="card-title">&#127961; Your Delivery Empire</div>
+                        <div class="city-map">
+                            <div class="map-grid"></div>
+                            <div class="zone zone-center unlocked" data-zone="downtown" onclick="clickZone('downtown')">&#127751;</div>
+                            <div class="zone zone-mid zone-north locked" data-zone="north" onclick="clickZone('north')">&#127968;</div>
+                            <div class="zone zone-mid zone-east locked" data-zone="east" onclick="clickZone('east')">&#127970;</div>
+                            <div class="zone zone-mid zone-south locked" data-zone="south" onclick="clickZone('south')">&#127969;</div>
+                            <div class="zone zone-mid zone-west locked" data-zone="west" onclick="clickZone('west')">&#127963;</div>
+                            <div class="zone zone-outer zone-ne locked" data-zone="ne" onclick="clickZone('ne')">&#127966;</div>
+                            <div class="zone zone-outer zone-se locked" data-zone="se" onclick="clickZone('se')">&#127967;</div>
+                            <div class="zone zone-outer zone-sw locked" data-zone="sw" onclick="clickZone('sw')">&#127965;</div>
+                            <div class="zone zone-outer zone-nw locked" data-zone="nw" onclick="clickZone('nw')">&#127964;</div>
+                            <div class="map-tip">&#128073; Click zones to expand! (Costs money)</div>
+                        </div>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill progress-orders" id="post-bar-orders" style="width: 70%;"></div>
-                    </div>
-                </div>
 
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span>&#127869; Restaurant Partners</span>
-                        <span id="post-partners">70</span>
+                    <!-- Meters -->
+                    <div class="card">
+                        <div class="card-title">&#128202; Your Stats</div>
+                        <div class="meters-grid">
+                            <div class="meter-card meter-orders">
+                                <div class="meter-emoji">&#127829;</div>
+                                <div class="meter-value" id="stat-orders">70</div>
+                                <div class="meter-label">Orders</div>
+                                <div class="meter-bar"><div class="meter-fill" id="bar-orders" style="width: 70%"></div></div>
+                            </div>
+                            <div class="meter-card meter-partners">
+                                <div class="meter-emoji">&#127869;</div>
+                                <div class="meter-value" id="stat-partners">70</div>
+                                <div class="meter-label">Restaurants</div>
+                                <div class="meter-bar"><div class="meter-fill" id="bar-partners" style="width: 70%"></div></div>
+                            </div>
+                            <div class="meter-card meter-drivers">
+                                <div class="meter-emoji">&#128666;</div>
+                                <div class="meter-value" id="stat-drivers">70</div>
+                                <div class="meter-label">Drivers</div>
+                                <div class="meter-bar"><div class="meter-fill" id="bar-drivers" style="width: 70%"></div></div>
+                            </div>
+                            <div class="meter-card meter-health">
+                                <div class="meter-emoji">&#128200;</div>
+                                <div class="meter-value" id="stat-health">70</div>
+                                <div class="meter-label">Company Health</div>
+                                <div class="meter-bar"><div class="meter-fill" id="bar-health" style="width: 70%"></div></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill progress-partners" id="post-bar-partners" style="width: 70%;"></div>
-                    </div>
-                </div>
 
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span>&#128666; Driver Satisfaction</span>
-                        <span id="post-drivers">70</span>
+                    <!-- Coach -->
+                    <div class="card" id="coach-card">
+                        <div class="coach-box">
+                            <div class="coach-avatar" id="coach-avatar">&#129464;</div>
+                            <div class="coach-bubble">
+                                <div class="coach-name" id="coach-name">Coach Morgan</div>
+                                <div class="coach-text" id="coach-text">
+                                    <strong>Hey there, future CEO!</strong> &#128075;<br><br>
+                                    Welcome to DeliverEmpire! I'll be your business coach.
+                                    Before we start building, let me test your business skills
+                                    with some quick questions. Ready?
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px; text-align: right;">
+                            <button class="btn btn-go" id="main-btn" onclick="mainAction()">
+                                &#128161; Let's Do It!
+                            </button>
+                        </div>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill progress-drivers" id="post-bar-drivers" style="width: 70%;"></div>
-                    </div>
-                </div>
 
-                <div class="progress-container">
-                    <div class="progress-label">
-                        <span>&#128200; Platform Health</span>
-                        <span id="post-platform">70</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill progress-platform" id="post-bar-platform" style="width: 70%;"></div>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn btn-primary" onclick="startPostQuiz()">
-                        &#127891; Final Evaluation
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mid Quiz Intro -->
-        <div class="screen" id="mid-quiz-intro-screen">
-            <div class="story-panel">
-                <div class="story-character">&#128218;</div>
-                <p class="story-text">
-                    <strong>"Quick checkpoint!"</strong><br><br>
-                    Alex pulls up some market research.<br><br>
-                    <span class="story-highlight">"Now that you've built your platform, let's see how your
-                    understanding of economics has grown. These questions dig a bit deeper."</span>
-                </p>
-                <button class="btn btn-primary" onclick="startMidQuiz()">
-                    &#128161; Let's Go!
-                </button>
-            </div>
-        </div>
-
-        <!-- Post Quiz Intro -->
-        <div class="screen" id="post-quiz-intro-screen">
-            <div class="story-panel">
-                <div class="story-character">&#127942;</div>
-                <p class="story-text">
-                    <strong>"Final stretch!"</strong><br><br>
-                    Alex gives you an encouraging nod.<br><br>
-                    <span class="story-highlight">"You've built a platform and survived a crisis.
-                    This final evaluation will test everything you've learned.
-                    Show me what you've got, future tycoon!"</span>
-                </p>
-                <button class="btn btn-primary" onclick="beginPostQuiz()">
-                    &#128640; Final Challenge
-                </button>
-            </div>
-        </div>
-
-        <!-- Final Results Screen -->
-        <div class="screen" id="final-results-screen">
-            <div class="card result-card">
-                <div class="result-badge" id="result-badge">
-                    &#127942;
-                </div>
-                <h2 class="result-title" id="final-title">Congratulations!</h2>
-                <p class="result-subtitle" id="final-subtitle">You've completed DeliverEmpire!</p>
-
-                <div class="result-stats">
-                    <div class="result-stat">
-                        <div class="result-stat-value" id="final-pre-score">0%</div>
-                        <div class="result-stat-label">Pre-Assessment</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="result-stat-value" id="final-mid-score">0%</div>
-                        <div class="result-stat-label">Mid-Assessment</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="result-stat-value" id="final-post-score">0%</div>
-                        <div class="result-stat-label">Final Assessment</div>
-                    </div>
-                    <div class="result-stat">
-                        <div class="result-stat-value" id="final-overall">0%</div>
-                        <div class="result-stat-label">Overall Score</div>
+                    <!-- Decision Panel (shown during choices) -->
+                    <div class="card" id="decision-card" style="display: none;">
+                        <div class="card-title" id="decision-title">&#127919; Make Your Choice!</div>
+                        <p style="color: var(--text-light); margin-bottom: 15px;" id="decision-desc">Think carefully...</p>
+                        <div class="choices-grid" id="decision-choices"></div>
+                        <div style="margin-top: 15px; text-align: right;">
+                            <button class="btn btn-action" id="decision-btn" onclick="confirmDecision()" disabled>
+                                Lock It In!
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="claim-code" id="claim-code-box" style="display: none;">
-                    <div class="claim-code-label">Your Credential Code</div>
-                    <div class="claim-code-value" id="claim-code-value">BOW-M2-GOLD-XXXXXX</div>
-                </div>
+                <!-- Side Panel -->
+                <div class="side-panel">
+                    <!-- Reviews -->
+                    <div class="card">
+                        <div class="card-title">&#11088; Customer Reviews</div>
+                        <div id="reviews">
+                            <div class="review">
+                                <div class="review-top">
+                                    <span class="review-name">PizzaFan123</span>
+                                    <span class="review-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</span>
+                                </div>
+                                <div class="review-text">"Just downloaded the app! Can't wait to try it!"</div>
+                            </div>
+                        </div>
+                    </div>
 
-                <h3 style="margin: 30px 0 15px; font-size: 1.1rem;">Concept Mastery</h3>
-                <div class="concept-grid" id="concept-mastery"></div>
+                    <!-- Power-ups -->
+                    <div class="card">
+                        <div class="card-title">&#9889; Power-Ups</div>
+                        <div id="powerups">
+                            <div class="powerup" data-id="speed" onclick="buyPowerup('speed')">
+                                <div class="powerup-icon">&#128640;</div>
+                                <div class="powerup-info">
+                                    <div class="powerup-name">Turbo Mode</div>
+                                    <div class="powerup-desc">Faster deliveries!</div>
+                                </div>
+                                <div class="powerup-cost">$500K</div>
+                            </div>
+                            <div class="powerup" data-id="ads" onclick="buyPowerup('ads')">
+                                <div class="powerup-icon">&#128250;</div>
+                                <div class="powerup-info">
+                                    <div class="powerup-name">TV Commercial</div>
+                                    <div class="powerup-desc">More customers!</div>
+                                </div>
+                                <div class="powerup-cost">$750K</div>
+                            </div>
+                            <div class="powerup" data-id="robot" onclick="buyPowerup('robot')">
+                                <div class="powerup-icon">&#129302;</div>
+                                <div class="powerup-info">
+                                    <div class="powerup-name">Smart Routing</div>
+                                    <div class="powerup-desc">Happy drivers!</div>
+                                </div>
+                                <div class="powerup-cost">$1M</div>
+                            </div>
+                        </div>
+                    </div>
 
-                <div style="margin-top: 30px;">
-                    <button class="btn btn-secondary" onclick="restartGame()">
-                        &#128260; Play Again
-                    </button>
+                    <!-- Achievements -->
+                    <div class="card">
+                        <div class="card-title">&#127942; Achievements</div>
+                        <div id="achievements" style="display: flex; gap: 8px; flex-wrap: wrap; font-size: 1.5rem;">
+                            <span style="opacity: 0.2;">&#128640;</span>
+                            <span style="opacity: 0.2;">&#127891;</span>
+                            <span style="opacity: 0.2;">&#127919;</span>
+                            <span style="opacity: 0.2;">&#9889;</span>
+                            <span style="opacity: 0.2;">&#127942;</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Achievement Popup (dynamically shown) -->
-    <div class="achievement-unlocked" id="achievement-popup" style="display: none;">
-        <div class="achievement-icon" id="achievement-icon">&#127942;</div>
-        <div class="achievement-text">
-            <h4 id="achievement-title">Achievement Unlocked!</h4>
-            <p id="achievement-desc">You did something awesome</p>
+    <!-- RESULTS SCREEN -->
+    <div class="screen" id="results-screen">
+        <div class="game-wrap">
+            <div class="results">
+                <div class="result-badge" id="result-badge">&#127942;</div>
+                <h1 id="result-title" style="font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 10px;">
+                    Amazing Job!
+                </h1>
+                <p id="result-sub" style="color: var(--text-light); margin-bottom: 25px;">
+                    You completed DeliverEmpire!
+                </p>
+
+                <div class="result-scores">
+                    <div class="result-score">
+                        <div class="result-score-val" id="res-pre">0%</div>
+                        <div class="result-score-label">Pre-Quiz</div>
+                    </div>
+                    <div class="result-score">
+                        <div class="result-score-val" id="res-mid">0%</div>
+                        <div class="result-score-label">Mid-Quiz</div>
+                    </div>
+                    <div class="result-score">
+                        <div class="result-score-val" id="res-post">0%</div>
+                        <div class="result-score-label">Final Quiz</div>
+                    </div>
+                    <div class="result-score">
+                        <div class="result-score-val" id="res-total">0%</div>
+                        <div class="result-score-label">Overall</div>
+                    </div>
+                </div>
+
+                <div class="claim-code" id="claim-box" style="display: none;">
+                    <div class="claim-label">Your Special Code</div>
+                    <div class="claim-value" id="claim-code">BOW-M2-GOLD-XXXXXX</div>
+                </div>
+
+                <div class="sports-tip">
+                    <div class="sports-tip-head">&#127936; What You Learned</div>
+                    Just like sports teams balance salary caps and player contracts,
+                    you learned to balance your company's money, keep partners happy,
+                    and make fair business decisions!
+                </div>
+
+                <h3 style="font-family: 'Fredoka One', cursive; margin: 25px 0 15px;">Your Skills</h3>
+                <div class="concept-grid" id="concepts"></div>
+
+                <button class="btn btn-action" onclick="restart()" style="margin-top: 25px;">
+                    &#128260; Play Again!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUIZ MODAL -->
+    <div class="modal-bg" id="quiz-modal">
+        <div class="modal">
+            <div class="modal-head">
+                <div class="modal-emoji" id="quiz-emoji">&#127891;</div>
+                <div class="modal-title" id="quiz-title">Quick Quiz!</div>
+                <div class="modal-sub" id="quiz-sub">Question 1 of 5</div>
+            </div>
+            <div class="quiz-badge" id="quiz-topic">Business Basics</div>
+            <p class="quiz-q" id="quiz-q">Loading question...</p>
+            <div class="choices-grid" id="quiz-choices"></div>
+            <div id="quiz-tip" class="quiz-tip" style="display: none;">
+                <div class="quiz-tip-title">&#127936; Sports Connection!</div>
+                <span id="quiz-tip-text"></span>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-go" id="quiz-btn" onclick="submitQuiz()" disabled>
+                    Check Answer!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MINI GAME MODAL -->
+    <div class="modal-bg" id="game-modal">
+        <div class="modal">
+            <div class="modal-head">
+                <div class="modal-emoji">&#127919;</div>
+                <div class="modal-title">Delivery Rush!</div>
+                <div class="modal-sub">Tap the food as fast as you can! Avoid the bombs! &#128163;</div>
+            </div>
+            <div class="game-arena" id="game-arena">
+                <div class="game-hud">
+                    <div class="game-hud-item" id="game-time">15s</div>
+                    <div class="game-hud-item">Score: <span id="game-score">0</span></div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-go" id="game-btn" onclick="startMiniGame()">
+                    &#128640; Start!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CRISIS MODAL -->
+    <div class="modal-bg" id="crisis-modal">
+        <div class="modal">
+            <div class="modal-head">
+                <div class="modal-emoji" style="animation: bounce 0.3s infinite;">&#9888;&#65039;</div>
+                <div class="modal-title" style="color: var(--accent-red);" id="crisis-m-title">OH NO!</div>
+                <div class="modal-sub" id="crisis-m-desc">Something happened!</div>
+            </div>
+            <div class="sports-tip" style="border-color: var(--accent-red); background: rgba(255,71,87,0.1);">
+                <div class="sports-tip-head" style="color: var(--accent-red);">&#127936; It's like in sports...</div>
+                <span id="crisis-sports-tip">When a star player gets injured, the team has to adjust!</span>
+            </div>
+            <p style="margin-bottom: 15px; color: var(--text-light);">What will you do?</p>
+            <div class="choices-grid" id="crisis-choices"></div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-danger" id="crisis-btn" onclick="submitCrisis()" disabled>
+                    Do It!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACHIEVEMENT POPUP -->
+    <div class="achieve-popup" id="achieve-popup">
+        <div class="achieve-icon" id="ach-icon">&#127942;</div>
+        <div class="achieve-info">
+            <h4 id="ach-title">Achievement!</h4>
+            <p id="ach-desc">You did something cool!</p>
         </div>
     </div>
 
     <script>
-        // ========================================
+        // ============================================
         // GAME STATE
-        // ========================================
-        const GameState = {
-            currentPhase: 1, // 1=pre, 2=sim, 3=mid, 4=crisis, 5=post
+        // ============================================
+        const G = {
+            money: 10000000,
             xp: 0,
+            week: 1,
+            phase: 'intro', // intro, pre, sim, mini, mid, crisis, post, results
 
-            // Stats
+            // Stats (like player stats in sports!)
             orders: 70,
             partners: 70,
             drivers: 70,
-            platform: 70,
+            health: 70,
 
-            // Baseline (pre-shock)
-            baselineOrders: 70,
-            baselinePartners: 70,
-            baselineDrivers: 70,
-            baselinePlatform: 70,
+            // Saved baselines
+            baseOrders: 70, basePartners: 70, baseDrivers: 70, baseHealth: 70,
 
-            // Quiz scores
-            preQuiz: { correct: 0, total: 5 },
-            midQuiz: { correct: 0, total: 5 },
-            postQuiz: { correct: 0, total: 10 },
+            // Zones
+            zones: ['downtown'],
+            zonePrices: { north: 500000, south: 500000, east: 500000, west: 500000, ne: 1000000, se: 1000000, sw: 1000000, nw: 1000000 },
 
-            // Concept tracking
-            conceptMisses: {},
+            // Power-ups
+            powerups: [],
 
-            // Current quiz state
-            currentQuiz: null, // 'pre', 'mid', 'post'
-            currentQuestion: 0,
-            selectedAnswer: null,
+            // Quiz
+            quizType: null,
+            quizIdx: 0,
+            quizPick: null,
+            preScore: { right: 0, total: 5 },
+            midScore: { right: 0, total: 5 },
+            postScore: { right: 0, total: 10 },
+            conceptMiss: {},
 
-            // SIM state
-            simDecision: 0,
-            simChoices: [],
-            selectedSimOption: null,
+            // Sim
+            simStep: 0,
+            simPick: null,
 
             // Crisis
-            crisisType: null,
-            selectedCrisisOption: null,
+            crisisPick: null,
+
+            // Mini game
+            miniScore: 0,
+            miniActive: false,
 
             // Achievements
-            achievements: []
+            badges: []
         };
 
-        // ========================================
-        // QUESTION BANKS
-        // ========================================
-        const preQuizQuestions = [
+        // ============================================
+        // QUESTIONS - Kid-friendly language!
+        // ============================================
+        const preQs = [
             {
-                concept: "Revenue Generation",
-                question: "A food delivery platform needs revenue to survive. Which model creates the MOST predictable monthly income?",
-                options: [
-                    { text: "Charge per delivery fee", correct: false },
-                    { text: "Monthly subscription service", correct: true },
-                    { text: "Commission on each order", correct: false },
-                    { text: "Advertising from restaurants", correct: false }
+                topic: "Making Money",
+                q: "Your delivery app needs to make money. Which way gives you the MOST steady income each month?",
+                opts: [
+                    { text: "Charge $3 per delivery", right: false },
+                    { text: "Charge $10/month for unlimited deliveries", right: true },
+                    { text: "Take a cut from each restaurant", right: false },
+                    { text: "Show ads in the app", right: false }
                 ],
-                explanation: "Subscriptions provide predictable recurring revenue, unlike per-transaction fees which fluctuate with demand."
+                sportsTip: "It's like season tickets! Teams love them because fans pay the same amount every month, win or lose!"
             },
             {
-                concept: "Market Size",
-                question: "You can either launch in NYC (population 8M) or across 50 small towns (total population 2M). Which strategy likely generates more revenue in Year 1?",
-                options: [
-                    { text: "50 small towns - more geographic coverage", correct: false },
-                    { text: "NYC - larger concentrated market", correct: true },
-                    { text: "Both equally - same total customers", correct: false },
-                    { text: "It depends on restaurant density", correct: false }
+                topic: "Market Size",
+                q: "You can launch in ONE big city (8 million people) OR 50 small towns (2 million people total). Which is better for your first year?",
+                opts: [
+                    { text: "50 small towns - more places!", right: false },
+                    { text: "One big city - more customers close together!", right: true },
+                    { text: "Both are the same", right: false },
+                    { text: "It doesn't matter", right: false }
                 ],
-                explanation: "Larger markets have higher order density, more restaurants, and better driver utilization - creating a stronger network effect."
+                sportsTip: "Big cities have more fans close together - that's why NBA and NFL teams are in big cities, not spread across tiny towns!"
             },
             {
-                concept: "Revenue Sharing",
-                question: "Your platform takes 30% commission from restaurants. If a restaurant's profit margin is 20%, what happens?",
-                options: [
-                    { text: "Restaurants make more money from delivery orders", correct: false },
-                    { text: "Restaurants lose money on every delivery order", correct: true },
-                    { text: "Restaurants break even", correct: false },
-                    { text: "It depends on order volume", correct: false }
+                topic: "Sharing Money",
+                q: "You take 30% of each order from restaurants. But restaurants only make 20% profit normally. What happens to them?",
+                opts: [
+                    { text: "They make more money!", right: false },
+                    { text: "They LOSE money on each delivery order", right: true },
+                    { text: "They break even", right: false },
+                    { text: "Nothing changes", right: false }
                 ],
-                explanation: "If a restaurant has 20% margin and pays 30% commission, they lose 10% on each order - this is unsustainable."
+                sportsTip: "Like when a team takes too much from player salaries - players get unhappy and might leave!"
             },
             {
-                concept: "Competitive Balance",
-                question: "A large chain like McDonald's demands exclusive lower fees (15%) while small restaurants pay 30%. What's the MAIN risk?",
-                options: [
-                    { text: "McDonald's might leave anyway", correct: false },
-                    { text: "Small restaurants can't compete and leave", correct: true },
-                    { text: "Customers won't notice the difference", correct: false },
-                    { text: "Drivers will prefer McDonald's orders", correct: false }
+                topic: "Fair Competition",
+                q: "McDonald's wants to pay only 15% while small restaurants pay 30%. What's the big problem?",
+                opts: [
+                    { text: "McDonald's might still leave", right: false },
+                    { text: "Small restaurants can't compete and will quit", right: true },
+                    { text: "Customers won't care", right: false },
+                    { text: "Drivers will be mad", right: false }
                 ],
-                explanation: "Unfair pricing creates an uneven playing field - small businesses can't compete when they're charged double the commission."
+                sportsTip: "This is why leagues have salary caps! Without them, rich teams would buy all the best players and small teams couldn't compete!"
             },
             {
-                concept: "Elasticity of Demand",
-                question: "You raise delivery fees from $3 to $5. Orders drop 40%. What does this tell you about your customers?",
-                options: [
-                    { text: "They have inelastic demand - they'll pay anything", correct: false },
-                    { text: "They have elastic demand - very price sensitive", correct: true },
-                    { text: "The app has a bug", correct: false },
-                    { text: "Competitors lowered their prices", correct: false }
+                topic: "Price Sensitivity",
+                q: "You raise delivery fees from $3 to $5. Orders drop by 40%! What does this tell you?",
+                opts: [
+                    { text: "People will pay anything", right: false },
+                    { text: "People are VERY sensitive to price changes", right: true },
+                    { text: "The app is broken", right: false },
+                    { text: "Other apps lowered prices", right: false }
                 ],
-                explanation: "A large drop in orders from a price increase shows elastic demand - customers are highly sensitive to price changes."
+                sportsTip: "When ticket prices go way up, fewer fans come to games. Teams have to find the right price that's not too high or too low!"
             }
         ];
 
-        const midQuizQuestions = [
+        const midQs = [
             {
-                concept: "Revenue Generation",
-                question: "Your platform offers 'DeliverPass' - unlimited free delivery for $10/month. Which customers hurt your profits?",
-                options: [
-                    { text: "Customers who order once a month", correct: false },
-                    { text: "Customers who order 20+ times a month", correct: true },
-                    { text: "Customers who share their accounts", correct: false },
-                    { text: "Customers who only order from expensive restaurants", correct: false }
+                topic: "Making Money",
+                q: "You offer 'DeliverPass' - unlimited free delivery for $10/month. Who costs you the MOST money?",
+                opts: [
+                    { text: "People who order once a month", right: false },
+                    { text: "People who order 20+ times a month", right: true },
+                    { text: "People who share accounts", right: false },
+                    { text: "People who order expensive food", right: false }
                 ],
-                explanation: "Heavy users who order frequently cost more in delivery expenses than the flat subscription fee generates."
+                sportsTip: "Season ticket holders who come to EVERY game use more resources. Teams have to plan for that!"
             },
             {
-                concept: "Market Size",
-                question: "You're expanding to a new city. What's the MINIMUM you need to create a functional marketplace?",
-                options: [
-                    { text: "Just restaurants - customers will come", correct: false },
-                    { text: "Just customers - restaurants will join", correct: false },
-                    { text: "Enough of all three: restaurants, customers, AND drivers", correct: true },
-                    { text: "Marketing budget to attract all groups", correct: false }
+                topic: "Market Size",
+                q: "You're expanding to a new city. What do you NEED to make it work?",
+                opts: [
+                    { text: "Just restaurants", right: false },
+                    { text: "Just customers", right: false },
+                    { text: "Restaurants AND customers AND drivers - all three!", right: true },
+                    { text: "A big marketing budget", right: false }
                 ],
-                explanation: "A marketplace needs critical mass on ALL sides - restaurants, customers, and drivers - to function properly."
+                sportsTip: "A sports league needs teams, fans, AND TV deals. Missing any one and it doesn't work!"
             },
             {
-                concept: "Revenue Sharing",
-                question: "Restaurants complain about high commissions but stay on your platform. Why?",
-                options: [
-                    { text: "They secretly love paying commissions", correct: false },
-                    { text: "They have no other way to reach delivery customers", correct: true },
-                    { text: "Your platform is the cheapest option", correct: false },
-                    { text: "They're locked into long contracts", correct: false }
+                topic: "Sharing Money",
+                q: "Restaurants hate your fees but stay on your app. Why?",
+                opts: [
+                    { text: "They love paying fees", right: false },
+                    { text: "You're the only way they can get delivery customers", right: true },
+                    { text: "You're the cheapest", right: false },
+                    { text: "They signed a long contract", right: false }
                 ],
-                explanation: "Many restaurants depend on platforms for delivery orders they couldn't get otherwise - even if commissions hurt their margins."
+                sportsTip: "Players sometimes play for teams they don't love because that's where the opportunity is!"
             },
             {
-                concept: "Competitive Balance",
-                question: "A new competitor offers restaurants 0% commission for the first year. What's their strategy?",
-                options: [
-                    { text: "They don't understand business", correct: false },
-                    { text: "They're buying market share to raise prices later", correct: true },
-                    { text: "They make money from delivery fees only", correct: false },
-                    { text: "They have a more efficient algorithm", correct: false }
+                topic: "Fair Competition",
+                q: "A new competitor offers restaurants 0% fees for a whole year. What's their plan?",
+                opts: [
+                    { text: "They're bad at business", right: false },
+                    { text: "Get everyone to join, then raise prices later!", right: true },
+                    { text: "They make money other ways", right: false },
+                    { text: "They have better technology", right: false }
                 ],
-                explanation: "This is predatory pricing - losing money now to capture market share, then raising prices once competitors are eliminated."
+                sportsTip: "Like when a team spends BIG to get star players and goes over the luxury tax - they're betting it pays off later!"
             },
             {
-                concept: "Tradeoffs",
-                question: "You must choose: faster delivery times OR lower costs for customers. What's the economic term for this?",
-                options: [
-                    { text: "Supply and demand", correct: false },
-                    { text: "Opportunity cost / tradeoff", correct: true },
-                    { text: "Economies of scale", correct: false },
-                    { text: "Market equilibrium", correct: false }
+                topic: "Tradeoffs",
+                q: "You have to choose: faster deliveries OR cheaper prices for customers. What's this called?",
+                opts: [
+                    { text: "Supply and demand", right: false },
+                    { text: "A tradeoff - you can't have both!", right: true },
+                    { text: "Economies of scale", right: false },
+                    { text: "Market balance", right: false }
                 ],
-                explanation: "Every choice has an opportunity cost - choosing one option means giving up the benefits of another."
+                sportsTip: "Teams face tradeoffs too - spend on star players OR build a new stadium? Can't always do both!"
             }
         ];
 
-        const postQuizQuestions = [
+        const postQs = [
             {
-                concept: "Elasticity of Demand",
-                question: "During a recession, your customer orders dropped 50% when you raised prices 10%. What type of good is food delivery during hard times?",
-                options: [
-                    { text: "A necessity with inelastic demand", correct: false },
-                    { text: "A luxury with elastic demand", correct: true },
-                    { text: "A Giffen good", correct: false },
-                    { text: "A complementary good", correct: false }
+                topic: "Price Sensitivity",
+                q: "During tough times, your orders dropped 50% when you raised prices just 10%. Food delivery is probably a...",
+                opts: [
+                    { text: "Necessity - people NEED it", right: false },
+                    { text: "Luxury - people can skip it when money is tight", right: true },
+                    { text: "Neither", right: false },
+                    { text: "Both", right: false }
                 ],
-                explanation: "Food delivery becomes a luxury in hard times - customers are very sensitive to price changes and cut back easily."
+                sportsTip: "Going to games is a luxury too. When times are hard, fans watch on TV instead!"
             },
             {
-                concept: "Elasticity of Demand",
-                question: "Premium restaurant orders dropped only 5% when prices increased 10%. What does this suggest about premium dining customers?",
-                options: [
-                    { text: "They're more price sensitive than budget customers", correct: false },
-                    { text: "They're less price sensitive - demand is inelastic", correct: true },
-                    { text: "They order more frequently", correct: false },
-                    { text: "They tip better", correct: false }
+                topic: "Price Sensitivity",
+                q: "Fancy restaurant orders only dropped 5% when prices went up 10%. What does that tell you about those customers?",
+                opts: [
+                    { text: "They care a lot about price", right: false },
+                    { text: "They DON'T care much about price - they want what they want!", right: true },
+                    { text: "They order more often", right: false },
+                    { text: "They tip better", right: false }
                 ],
-                explanation: "Premium customers show inelastic demand - they're less sensitive to price changes because they value convenience highly."
+                sportsTip: "Luxury box fans pay a LOT but they don't care - they want the VIP experience!"
             },
             {
-                concept: "Tradeoffs",
-                question: "You can invest $1M in either faster delivery tech OR restaurant acquisition. Choosing delivery tech means you can't do restaurant acquisition. This is an example of:",
-                options: [
-                    { text: "Sunk cost", correct: false },
-                    { text: "Opportunity cost", correct: true },
-                    { text: "Fixed cost", correct: false },
-                    { text: "Marginal cost", correct: false }
+                topic: "Tradeoffs",
+                q: "You can spend $1 million on better delivery tech OR getting more restaurants. You pick tech. What did you give up?",
+                opts: [
+                    { text: "Nothing", right: false },
+                    { text: "The chance to get more restaurants - that's the tradeoff!", right: true },
+                    { text: "Your tech budget", right: false },
+                    { text: "Your drivers", right: false }
                 ],
-                explanation: "Opportunity cost is what you give up when making a choice - here, it's the restaurant acquisition benefits."
+                sportsTip: "When teams sign a big star, they give up money they could've spent on other players!"
             },
             {
-                concept: "Tradeoffs",
-                question: "Your platform prioritizes speed over accuracy. Some orders arrive fast but wrong. What's the hidden cost?",
-                options: [
-                    { text: "Refunds and customer trust damage", correct: true },
-                    { text: "Faster delivery times", correct: false },
-                    { text: "Lower driver wages", correct: false },
-                    { text: "Reduced restaurant partners", correct: false }
+                topic: "Tradeoffs",
+                q: "You made deliveries SUPER fast but some orders are wrong. What's the hidden cost?",
+                opts: [
+                    { text: "Refunds and angry customers who won't come back!", right: true },
+                    { text: "Faster delivery times", right: false },
+                    { text: "Lower driver pay", right: false },
+                    { text: "Fewer restaurants", right: false }
                 ],
-                explanation: "Speed-accuracy tradeoffs have hidden costs: refunds, angry customers, and long-term reputation damage."
+                sportsTip: "If a team rushes and makes bad trades, they might win now but hurt the team later!"
             },
             {
-                concept: "Competitive Balance",
-                question: "Three companies control 90% of food delivery. They all raise prices 15% in the same month. This is potentially:",
-                options: [
-                    { text: "Healthy competition", correct: false },
-                    { text: "Price coordination / collusion", correct: true },
-                    { text: "Market efficiency", correct: false },
-                    { text: "Supply and demand at work", correct: false }
+                topic: "Fair Competition",
+                q: "Three big delivery companies control 90% of the market. They ALL raise prices 15% at the same time. That's probably...",
+                opts: [
+                    { text: "Fair competition", right: false },
+                    { text: "Cheating! They're working together to overcharge people!", right: true },
+                    { text: "Market forces", right: false },
+                    { text: "Supply and demand", right: false }
                 ],
-                explanation: "When dominant competitors raise prices together, it suggests coordination rather than competition - hurting consumers."
+                sportsTip: "This is why sports leagues have rules - so teams don't secretly work together to hurt fans!"
             },
             {
-                concept: "Revenue Sharing",
-                question: "A restaurant makes $20 profit on a $50 dine-in order. Your platform charges 25% commission on delivery. How much does the restaurant make on a $50 delivery order?",
-                options: [
-                    { text: "$20 - same as dine-in", correct: false },
-                    { text: "$7.50 - much less than dine-in", correct: true },
-                    { text: "$12.50 - a bit less", correct: false },
-                    { text: "They lose money", correct: false }
+                topic: "Sharing Money",
+                q: "A restaurant makes $20 profit on a $50 dine-in order. You charge 25% commission. How much do they make on delivery?",
+                opts: [
+                    { text: "$20 - same as before", right: false },
+                    { text: "Only $7.50 - way less!", right: true },
+                    { text: "$12.50", right: false },
+                    { text: "They lose money", right: false }
                 ],
-                explanation: "$50 x 25% = $12.50 commission. If base profit was $20, they now make $20 - $12.50 = $7.50 per delivery order."
+                sportsTip: "Players lose money to agent fees, taxes, and more. Their 'cut' is always less than it looks!"
             },
             {
-                concept: "Tradeoffs",
-                question: "You've discovered paying drivers more increases satisfaction but reduces your profit margin. You decide to pay less. What's the likely long-term effect?",
-                options: [
-                    { text: "Drivers stay because they need work", correct: false },
-                    { text: "Driver turnover increases, hurting service quality", correct: true },
-                    { text: "Customers won't notice any difference", correct: false },
-                    { text: "Restaurants will cover the difference", correct: false }
+                topic: "Tradeoffs",
+                q: "Paying drivers more makes them happy but cuts your profits. You decide to pay less. What probably happens?",
+                opts: [
+                    { text: "Drivers stay because they need work", right: false },
+                    { text: "Good drivers quit, service gets worse, customers leave!", right: true },
+                    { text: "Customers won't notice", right: false },
+                    { text: "Restaurants will pay more", right: false }
                 ],
-                explanation: "Short-term profit gains from cutting driver pay lead to higher turnover, worse service, and unhappy customers."
+                sportsTip: "Teams that don't pay players well lose them to other teams. Then the team gets worse!"
             },
             {
-                concept: "Elasticity of Demand",
-                question: "You offer a 50% discount and orders triple. You remove the discount and orders return to normal. What did you learn?",
-                options: [
-                    { text: "Discounts permanently increase demand", correct: false },
-                    { text: "Your customers are highly price elastic - discounts don't build loyalty", correct: true },
-                    { text: "You should always offer discounts", correct: false },
-                    { text: "The marketing was ineffective", correct: false }
+                topic: "Price Sensitivity",
+                q: "You offer 50% off and orders TRIPLE! You stop the sale and orders go back to normal. What did you learn?",
+                opts: [
+                    { text: "Sales build loyal customers", right: false },
+                    { text: "Customers only came for the deal - they're not loyal!", right: true },
+                    { text: "You should always have sales", right: false },
+                    { text: "Your marketing is great", right: false }
                 ],
-                explanation: "If demand spikes only during discounts and returns to baseline after, customers are price-sensitive opportunists, not loyal."
+                sportsTip: "Fans who only show up for free t-shirt night aren't your biggest supporters!"
             },
             {
-                concept: "Revenue Sharing",
-                question: "Drivers earn $5 per delivery. Gas costs $3 per delivery. A driver does 4 deliveries per hour. What's their REAL hourly wage after expenses?",
-                options: [
-                    { text: "$20/hour", correct: false },
-                    { text: "$12/hour", correct: false },
-                    { text: "$8/hour", correct: true },
-                    { text: "$5/hour", correct: false }
+                topic: "Sharing Money",
+                q: "A driver earns $5 per delivery but gas costs $3. They do 4 deliveries per hour. What do they REALLY make per hour?",
+                opts: [
+                    { text: "$20/hour", right: false },
+                    { text: "$12/hour", right: false },
+                    { text: "$8/hour - after paying for gas!", right: true },
+                    { text: "$5/hour", right: false }
                 ],
-                explanation: "4 deliveries x $5 = $20 gross. 4 deliveries x $3 gas = $12 expenses. $20 - $12 = $8/hour real wage."
+                sportsTip: "Athletes' salaries sound huge, but after taxes, agents, and expenses, they keep way less!"
             },
             {
-                concept: "Tradeoffs",
-                question: "A crisis forces you to choose: raise prices (hurting customers) OR cut driver pay (hurting drivers). Which stakeholder should a sustainable business prioritize?",
-                options: [
-                    { text: "Always customers - they generate revenue", correct: false },
-                    { text: "Always drivers - they deliver the service", correct: false },
-                    { text: "Balance both - extreme choices hurt the whole system", correct: true },
-                    { text: "Neither - cut costs elsewhere", correct: false }
+                topic: "Tradeoffs",
+                q: "A crisis hits! You can: raise prices (hurt customers) OR cut driver pay (hurt drivers). Best choice?",
+                opts: [
+                    { text: "Always protect customers", right: false },
+                    { text: "Always protect drivers", right: false },
+                    { text: "Find a balance - hurting anyone too much breaks the whole thing!", right: true },
+                    { text: "Cut costs somewhere else", right: false }
                 ],
-                explanation: "Sustainable businesses balance stakeholder needs. Extreme cuts to any group destabilize the entire system."
+                sportsTip: "Good teams balance player salaries, ticket prices, and owner profits. Go too far either way and everyone loses!"
             }
         ];
 
-        // ========================================
-        // SIM DECISIONS
-        // ========================================
-        const simDecisions = [
+        // ============================================
+        // SIMULATION DECISIONS
+        // ============================================
+        const simSteps = [
             {
-                title: "Decision 1: Revenue Model",
-                description: "How will your platform make money? This affects customer behavior and partner relationships.",
-                icon: "&#128176;",
-                options: [
-                    {
-                        text: "Charge customers a delivery fee",
-                        impact: "Orders -10, Platform +5",
-                        effects: { orders: -10, partners: 0, drivers: 0, platform: 5 }
-                    },
-                    {
-                        text: "Take a commission from restaurants",
-                        impact: "Partners -15, Drivers -5",
-                        effects: { orders: 0, partners: -15, drivers: -5, platform: 0 }
-                    },
-                    {
-                        text: "Offer monthly subscriptions",
-                        impact: "Orders +10, Platform +5",
-                        effects: { orders: 10, partners: 0, drivers: 0, platform: 5 }
-                    }
+                title: "&#128176; How Will You Make Money?",
+                desc: "Every business needs income! Pick your strategy.",
+                opts: [
+                    { text: "Charge customers a delivery fee", icon: "&#128179;", fx: { orders: -10, health: 5 } },
+                    { text: "Take 25% from restaurants", icon: "&#127869;", fx: { partners: -15, drivers: -5 } },
+                    { text: "$10/month subscription", icon: "&#128179;", fx: { orders: 10, health: 5 } }
                 ]
             },
             {
-                title: "Decision 2: Market Strategy",
-                description: "Where will you operate? Geographic strategy affects your network density and growth.",
-                icon: "&#127758;",
-                options: [
-                    {
-                        text: "Operate in one large city",
-                        impact: "Orders +5, Platform -5",
-                        effects: { orders: 5, partners: 0, drivers: 0, platform: -5 }
-                    },
-                    {
-                        text: "Operate in many small towns",
-                        impact: "Orders +10, Drivers -5",
-                        effects: { orders: 10, partners: 0, drivers: -5, platform: 0 }
-                    }
+                title: "&#127758; Where Will You Operate?",
+                desc: "Location matters! Where should you focus?",
+                opts: [
+                    { text: "One big city - dominate it!", icon: "&#127751;", fx: { orders: 5, health: -5 } },
+                    { text: "Many small towns - spread out!", icon: "&#127968;", fx: { orders: 10, drivers: -5 } }
                 ]
             },
             {
-                title: "Decision 3: Revenue Sharing",
-                description: "How will you split profits with restaurants and drivers? This defines partner relationships.",
-                icon: "&#129309;",
-                options: [
-                    {
-                        text: "Platform keeps a larger share",
-                        impact: "Partners -10, Drivers -10",
-                        effects: { orders: 0, partners: -10, drivers: -10, platform: 0 }
-                    },
-                    {
-                        text: "Platform and partners split evenly",
-                        impact: "Platform +5",
-                        effects: { orders: 0, partners: 0, drivers: 0, platform: 5 }
-                    },
-                    {
-                        text: "Partners keep a larger share",
-                        impact: "Partners +10, Drivers +10",
-                        effects: { orders: 0, partners: 10, drivers: 10, platform: 0 }
-                    }
+                title: "&#129309; How Do You Split the Money?",
+                desc: "Restaurants and drivers want their fair share. What's your plan?",
+                opts: [
+                    { text: "Your company keeps more", icon: "&#128181;", fx: { partners: -10, drivers: -10 } },
+                    { text: "Split it 50/50 - fair is fair!", icon: "&#129309;", fx: { health: 5 } },
+                    { text: "Give partners more", icon: "&#128149;", fx: { partners: 10, drivers: 10 } }
                 ]
             },
             {
-                title: "Decision 4: Competition Policy",
-                description: "How will you treat different sizes of restaurants? This affects market fairness.",
-                icon: "&#9878;&#65039;",
-                options: [
-                    {
-                        text: "Lower fees for small businesses",
-                        impact: "Platform +15, Orders +5",
-                        effects: { orders: 5, partners: 0, drivers: 0, platform: 15 }
-                    },
-                    {
-                        text: "Same rules for all businesses",
-                        impact: "Platform +5",
-                        effects: { orders: 0, partners: 0, drivers: 0, platform: 5 }
-                    },
-                    {
-                        text: "Special deals for large chains",
-                        impact: "Platform -15, Partners -10",
-                        effects: { orders: 0, partners: -10, drivers: 0, platform: -15 }
-                    }
+                title: "&#9878;&#65039; How Do You Treat Different Restaurants?",
+                desc: "Big chains vs small restaurants - same rules or different?",
+                opts: [
+                    { text: "Help small businesses with lower fees", icon: "&#127978;", fx: { health: 15, orders: 5 } },
+                    { text: "Same rules for everyone", icon: "&#9878;&#65039;", fx: { health: 5 } },
+                    { text: "Special deals for big chains", icon: "&#127828;", fx: { health: -15, partners: -10 } }
                 ]
             }
         ];
 
-        // ========================================
+        // ============================================
         // CRISIS SCENARIOS
-        // ========================================
-        const crisisScenarios = [
-            {
-                id: "COST_INCREASE",
-                title: "MARKET SHOCK: Cost Surge!",
-                description: "Fuel prices and labor costs have spiked 40%. Your margins are bleeding red!",
-                icon: "&#128293;"
-            },
-            {
-                id: "DEMAND_SURGE",
-                title: "MARKET SHOCK: Demand Explosion!",
-                description: "A viral trend caused orders to triple overnight. Your system is overwhelmed!",
-                icon: "&#128640;"
-            },
-            {
-                id: "REGULATION",
-                title: "MARKET SHOCK: New Regulations!",
-                description: "The government just passed new labor laws. Compliance costs are skyrocketing!",
-                icon: "&#128220;"
-            }
+        // ============================================
+        const crisisTypes = [
+            { title: "GAS PRICES EXPLODE!", desc: "Gas costs way more now! Your delivery costs are through the roof!", tip: "Like when a team's stadium costs suddenly go up!" },
+            { title: "EVERYONE WANTS FOOD!", desc: "A viral TikTok made EVERYONE order at once! Your system is crashing!", tip: "Like when a team makes the playoffs and everyone wants tickets!" },
+            { title: "NEW RULES FROM THE GOVERNMENT!", desc: "New laws say you have to give drivers more benefits. It costs a lot!", tip: "Like when leagues create new salary rules teams have to follow!" }
         ];
 
-        const crisisResponses = [
-            {
-                text: "Raise customer prices",
-                impact: "Customers pay more to cover costs",
-                effects: { orders: -7, partners: 1, drivers: 0, platform: 6 }
-            },
-            {
-                text: "Reduce partner payouts",
-                impact: "Restaurants and drivers absorb the cost",
-                effects: { orders: 1, partners: -7, drivers: -7, platform: 6 }
-            },
-            {
-                text: "Accept lower platform profit",
-                impact: "Your company absorbs the hit",
-                effects: { orders: 4, partners: 4, drivers: 4, platform: -7 }
-            },
-            {
-                text: "Cut service levels",
-                impact: "Reduce quality to reduce costs",
-                effects: { orders: -6, partners: -4, drivers: -4, platform: 2 }
-            }
+        const crisisOpts = [
+            { text: "Raise prices for customers", icon: "&#128184;", fx: { orders: -7, partners: 1, health: 6 } },
+            { text: "Pay restaurants and drivers less", icon: "&#128148;", fx: { orders: 1, partners: -7, drivers: -7, health: 6 } },
+            { text: "Your company takes the hit", icon: "&#129402;", fx: { orders: 4, partners: 4, drivers: 4, health: -7 } },
+            { text: "Make service a bit worse to save money", icon: "&#128546;", fx: { orders: -6, partners: -4, drivers: -4, health: 2 } }
         ];
 
-        // ========================================
-        // UTILITY FUNCTIONS
-        // ========================================
-        function clamp(value, min, max) {
-            return Math.max(min, Math.min(max, value));
-        }
+        // ============================================
+        // REVIEWS
+        // ============================================
+        const goodReviews = [
+            { name: "PizzaLover99", stars: 5, text: "SO FAST! My pizza was still hot!" },
+            { name: "HungryKid", stars: 5, text: "Best app ever! So many choices!" },
+            { name: "BusyMom", stars: 4, text: "Saved my dinner! Thanks!" },
+            { name: "TacoTime", stars: 5, text: "Driver was super nice!" },
+            { name: "BurgerBoss", stars: 5, text: "My new favorite app!" }
+        ];
 
-        function randInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
+        const badReviews = [
+            { name: "SadSam", stars: 2, text: "Took forever... food was cold." },
+            { name: "MadMax", stars: 1, text: "Wrong order AGAIN!" },
+            { name: "AngryAlex", stars: 2, text: "Prices keep going up!" },
+            { name: "UpsetUma", stars: 1, text: "Driver got lost!" }
+        ];
 
-        function showScreen(screenId) {
+        // ============================================
+        // UTILITIES
+        // ============================================
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+        function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+        function formatM(n) { return (n / 1000000).toFixed(1) + 'M'; }
+
+        function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            document.getElementById(id).classList.add('active');
         }
 
-        function updateStats() {
-            document.getElementById('stat-orders').textContent = GameState.orders;
-            document.getElementById('stat-partners').textContent = GameState.partners;
-            document.getElementById('stat-drivers').textContent = GameState.drivers;
-            document.getElementById('stat-platform').textContent = GameState.platform;
-            document.getElementById('stat-xp').textContent = GameState.xp;
-        }
+        function updateUI() {
+            document.getElementById('money').textContent = formatM(G.money);
+            document.getElementById('xp').textContent = G.xp;
+            document.getElementById('week').textContent = G.week;
 
-        function updatePhaseIndicator(phase) {
-            document.querySelectorAll('.phase-dot').forEach(dot => {
-                const dotPhase = parseInt(dot.dataset.phase);
-                dot.classList.remove('active', 'complete');
-                if (dotPhase < phase) dot.classList.add('complete');
-                if (dotPhase === phase) dot.classList.add('active');
-            });
-        }
+            document.getElementById('stat-orders').textContent = G.orders;
+            document.getElementById('stat-partners').textContent = G.partners;
+            document.getElementById('stat-drivers').textContent = G.drivers;
+            document.getElementById('stat-health').textContent = G.health;
 
-        function showAchievement(icon, title, desc) {
-            const popup = document.getElementById('achievement-popup');
-            document.getElementById('achievement-icon').innerHTML = icon;
-            document.getElementById('achievement-title').textContent = title;
-            document.getElementById('achievement-desc').textContent = desc;
-            popup.style.display = 'flex';
+            document.getElementById('bar-orders').style.width = G.orders + '%';
+            document.getElementById('bar-partners').style.width = G.partners + '%';
+            document.getElementById('bar-drivers').style.width = G.drivers + '%';
+            document.getElementById('bar-health').style.width = G.health + '%';
 
-            setTimeout(() => {
-                popup.style.display = 'none';
-            }, 3500);
-        }
-
-        function addXP(amount) {
-            GameState.xp += amount;
-            updateStats();
-
-            // Floating coin effect
-            const coin = document.createElement('div');
-            coin.className = 'float-coin';
-            coin.textContent = '+' + amount;
-            coin.style.left = Math.random() * 80 + 10 + '%';
-            coin.style.top = '50%';
-            document.body.appendChild(coin);
-            setTimeout(() => coin.remove(), 1000);
-        }
-
-        function generateClaimCode(tier) {
-            const suffix = Math.random().toString(36).substring(2, 8).toUpperCase();
-            const pools = {
-                GOLD: ["BOW-M2-GOLD", "BOW-M2-PRIME", "BOW-M2-ELITE"],
-                SILVER: ["BOW-M2-SILVER", "BOW-M2-CORE", "BOW-M2-ADV"],
-                BRONZE: ["BOW-M2-BRONZE", "BOW-M2-BASIC", "BOW-M2-FOUND"]
-            };
-            const pool = pools[tier] || pools.BRONZE;
-            const base = pool[Math.floor(Math.random() * pool.length)];
-            return `${base}-${suffix}`;
-        }
-
-        // ========================================
-        // GAME FLOW
-        // ========================================
-        function startGame() {
-            document.getElementById('stats-bar').style.display = 'flex';
-            document.getElementById('phase-indicator').style.display = 'flex';
-            updatePhaseIndicator(1);
-            showScreen('pre-quiz-screen');
-            showAchievement('&#128640;', 'Journey Begins!', 'You launched your startup adventure');
-        }
-
-        function startPreQuiz() {
-            GameState.currentQuiz = 'pre';
-            GameState.currentQuestion = 0;
-            GameState.selectedAnswer = null;
-            GameState.preQuiz.correct = 0;
-            showScreen('quiz-screen');
-            loadQuizQuestion();
-        }
-
-        function loadQuizQuestion() {
-            const questions = GameState.currentQuiz === 'pre' ? preQuizQuestions :
-                             GameState.currentQuiz === 'mid' ? midQuizQuestions : postQuizQuestions;
-
-            const q = questions[GameState.currentQuestion];
-            const total = questions.length;
-
-            document.getElementById('quiz-concept').textContent = q.concept;
-            document.getElementById('quiz-progress').textContent = `Question ${GameState.currentQuestion + 1}/${total}`;
-            document.getElementById('quiz-question').textContent = q.question;
-
-            const optionsContainer = document.getElementById('quiz-options');
-            optionsContainer.innerHTML = '';
-
-            q.options.forEach((opt, idx) => {
-                const optionEl = document.createElement('div');
-                optionEl.className = 'decision-option';
-                optionEl.innerHTML = `
-                    <div class="decision-title">${String.fromCharCode(65 + idx)}. ${opt.text}</div>
-                `;
-                optionEl.onclick = () => selectQuizAnswer(idx, optionEl);
-                optionsContainer.appendChild(optionEl);
-            });
-
-            GameState.selectedAnswer = null;
-            document.getElementById('quiz-submit').disabled = true;
-        }
-
-        function selectQuizAnswer(idx, element) {
-            document.querySelectorAll('#quiz-options .decision-option').forEach(el => {
-                el.classList.remove('selected');
-            });
-            element.classList.add('selected');
-            GameState.selectedAnswer = idx;
-            document.getElementById('quiz-submit').disabled = false;
-        }
-
-        function submitQuizAnswer() {
-            const questions = GameState.currentQuiz === 'pre' ? preQuizQuestions :
-                             GameState.currentQuiz === 'mid' ? midQuizQuestions : postQuizQuestions;
-
-            const q = questions[GameState.currentQuestion];
-            const selectedOpt = q.options[GameState.selectedAnswer];
-            const isCorrect = selectedOpt.correct;
-
-            // Show result
-            const options = document.querySelectorAll('#quiz-options .decision-option');
-            q.options.forEach((opt, idx) => {
-                if (opt.correct) {
-                    options[idx].classList.add('correct');
-                } else if (idx === GameState.selectedAnswer && !isCorrect) {
-                    options[idx].classList.add('incorrect');
+            // Zones
+            document.querySelectorAll('.zone').forEach(z => {
+                const id = z.dataset.zone;
+                if (G.zones.includes(id)) {
+                    z.classList.remove('locked');
+                    z.classList.add('unlocked');
                 }
             });
+        }
 
-            // Update score
-            const quizKey = GameState.currentQuiz + 'Quiz';
-            if (isCorrect) {
-                GameState[quizKey].correct++;
+        function floatFX(text, type, x, y) {
+            const el = document.createElement('div');
+            el.className = 'float-effect float-' + type;
+            el.textContent = text;
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 1200);
+        }
+
+        function addXP(n) {
+            G.xp += n;
+            updateUI();
+        }
+
+        function applyFX(fx) {
+            if (fx.orders) G.orders = clamp(G.orders + fx.orders, 0, 100);
+            if (fx.partners) G.partners = clamp(G.partners + fx.partners, 0, 100);
+            if (fx.drivers) G.drivers = clamp(G.drivers + fx.drivers, 0, 100);
+            if (fx.health) G.health = clamp(G.health + fx.health, 0, 100);
+            if (fx.money) G.money += fx.money;
+            updateUI();
+        }
+
+        function showAchieve(icon, title, desc) {
+            if (G.badges.includes(title)) return;
+            G.badges.push(title);
+
+            document.getElementById('ach-icon').textContent = icon;
+            document.getElementById('ach-title').textContent = title;
+            document.getElementById('ach-desc').textContent = desc;
+            document.getElementById('achieve-popup').classList.add('show');
+
+            // Update badges display
+            const iconMap = { 'Launched!': '&#128640;', 'Quiz Star': '&#127891;', 'Empire Builder': '&#127919;', 'Crisis Hero': '&#9889;', 'Champion': '&#127942;' };
+            document.getElementById('achievements').innerHTML = G.badges.map(b => `<span>${iconMap[b] || '&#11088;'}</span>`).join('');
+
+            addXP(50);
+            setTimeout(() => document.getElementById('achieve-popup').classList.remove('show'), 3000);
+        }
+
+        function addReview(r) {
+            const el = document.createElement('div');
+            el.className = 'review';
+            el.innerHTML = `<div class="review-top"><span class="review-name">${r.name}</span><span class="review-stars">${'&#11088;'.repeat(r.stars)}</span></div><div class="review-text">"${r.text}"</div>`;
+            const list = document.getElementById('reviews');
+            list.insertBefore(el, list.firstChild);
+            if (list.children.length > 4) list.removeChild(list.lastChild);
+        }
+
+        function setCoach(avatar, name, text) {
+            document.getElementById('coach-avatar').textContent = avatar;
+            document.getElementById('coach-name').textContent = name;
+            document.getElementById('coach-text').innerHTML = text;
+        }
+
+        function setMainBtn(text, fn) {
+            const btn = document.getElementById('main-btn');
+            btn.innerHTML = text;
+            btn.onclick = fn;
+        }
+
+        // ============================================
+        // GAME FLOW
+        // ============================================
+        function startGame() {
+            showScreen('game-screen');
+            G.phase = 'pre';
+            showAchieve('&#128640;', 'Launched!', 'Your journey begins!');
+            createBGItems();
+            updateUI();
+        }
+
+        function createBGItems() {
+            const items = ['&#127829;', '&#127828;', '&#127835;', '&#127836;', '&#128666;', '&#127843;', '&#127839;'];
+            const bg = document.getElementById('bg-fun');
+            for (let i = 0; i < 12; i++) {
+                const el = document.createElement('div');
+                el.className = 'floating-item';
+                el.innerHTML = pick(items);
+                el.style.left = rand(5, 95) + '%';
+                el.style.animationDelay = rand(0, 20) + 's';
+                el.style.animationDuration = rand(20, 35) + 's';
+                bg.appendChild(el);
+            }
+        }
+
+        function mainAction() {
+            if (G.phase === 'pre') openQuiz('pre');
+            else if (G.phase === 'sim') showSimStep();
+            else if (G.phase === 'mini') openMiniGame();
+            else if (G.phase === 'mid') openQuiz('mid');
+            else if (G.phase === 'crisis') openCrisis();
+            else if (G.phase === 'post') openQuiz('post');
+        }
+
+        // ============================================
+        // QUIZ
+        // ============================================
+        function openQuiz(type) {
+            G.quizType = type;
+            G.quizIdx = 0;
+            G.quizPick = null;
+            G[type + 'Score'].right = 0;
+            document.getElementById('quiz-modal').classList.add('show');
+            loadQuizQ();
+        }
+
+        function loadQuizQ() {
+            const qs = G.quizType === 'pre' ? preQs : G.quizType === 'mid' ? midQs : postQs;
+            const q = qs[G.quizIdx];
+
+            document.getElementById('quiz-title').textContent = G.quizType === 'pre' ? 'Pre-Quiz' : G.quizType === 'mid' ? 'Mid-Quiz' : 'Final Quiz';
+            document.getElementById('quiz-sub').textContent = `Question ${G.quizIdx + 1} of ${qs.length}`;
+            document.getElementById('quiz-topic').textContent = q.topic;
+            document.getElementById('quiz-q').textContent = q.q;
+            document.getElementById('quiz-tip').style.display = 'none';
+
+            const el = document.getElementById('quiz-choices');
+            el.innerHTML = '';
+            q.opts.forEach((o, i) => {
+                const div = document.createElement('div');
+                div.className = 'choice-card';
+                div.innerHTML = `<div class="choice-icon">${String.fromCharCode(65 + i)}</div><div class="choice-content"><div class="choice-title">${o.text}</div></div>`;
+                div.onclick = () => pickQuizAnswer(i);
+                el.appendChild(div);
+            });
+
+            G.quizPick = null;
+            document.getElementById('quiz-btn').disabled = true;
+        }
+
+        function pickQuizAnswer(i) {
+            document.querySelectorAll('#quiz-choices .choice-card').forEach((el, idx) => {
+                el.classList.toggle('selected', idx === i);
+            });
+            G.quizPick = i;
+            document.getElementById('quiz-btn').disabled = false;
+        }
+
+        function submitQuiz() {
+            const qs = G.quizType === 'pre' ? preQs : G.quizType === 'mid' ? midQs : postQs;
+            const q = qs[G.quizIdx];
+            const isRight = q.opts[G.quizPick].right;
+
+            document.querySelectorAll('#quiz-choices .choice-card').forEach((el, i) => {
+                if (q.opts[i].right) el.classList.add('correct');
+                else if (i === G.quizPick) el.classList.add('wrong');
+            });
+
+            // Show sports tip
+            document.getElementById('quiz-tip').style.display = 'block';
+            document.getElementById('quiz-tip-text').textContent = q.sportsTip;
+
+            if (isRight) {
+                G[G.quizType + 'Score'].right++;
                 addXP(20);
+                addReview(pick(goodReviews));
             } else {
-                // Track concept misses
-                const concept = q.concept;
-                GameState.conceptMisses[concept] = (GameState.conceptMisses[concept] || 0) + 1;
+                G.conceptMiss[q.topic] = (G.conceptMiss[q.topic] || 0) + 1;
             }
 
-            document.getElementById('quiz-submit').disabled = true;
+            document.getElementById('quiz-btn').disabled = true;
 
-            // Move to next question after delay
             setTimeout(() => {
-                GameState.currentQuestion++;
-
-                if (GameState.currentQuestion >= questions.length) {
-                    finishQuiz();
-                } else {
-                    loadQuizQuestion();
-                }
-            }, 1500);
+                G.quizIdx++;
+                if (G.quizIdx >= qs.length) finishQuiz();
+                else loadQuizQ();
+            }, 2000);
         }
 
         function finishQuiz() {
-            const quiz = GameState.currentQuiz;
-            const quizKey = quiz + 'Quiz';
-            const score = GameState[quizKey];
-            const percent = Math.round((score.correct / score.total) * 100);
+            document.getElementById('quiz-modal').classList.remove('show');
+            const pct = Math.round((G[G.quizType + 'Score'].right / G[G.quizType + 'Score'].total) * 100);
 
-            if (percent >= 80) {
-                showAchievement('&#127942;', 'Quiz Master!', `Scored ${percent}% on ${quiz.toUpperCase()} assessment`);
-            }
+            if (pct >= 80) showAchieve('&#127891;', 'Quiz Star', `Got ${pct}% on the ${G.quizType} quiz!`);
 
-            if (quiz === 'pre') {
-                updatePhaseIndicator(2);
-                showScreen('sim-intro-screen');
-            } else if (quiz === 'mid') {
-                updatePhaseIndicator(4);
-                showScreen('crisis-screen');
-                initCrisis();
+            if (G.quizType === 'pre') {
+                G.phase = 'sim';
+                G.simStep = 0;
+                G.week = 1;
+                setCoach('&#129464;', 'Coach Morgan',
+                    `<strong>Nice job!</strong> You got ${pct}%! &#127881;<br><br>
+                    Now let's build your company! You'll make 4 big decisions.
+                    Think carefully - each choice affects your business!`);
+                setMainBtn('&#127919; Build My Company!', showSimStep);
+            } else if (G.quizType === 'mid') {
+                G.phase = 'crisis';
+                G.week = 3;
+                setCoach('&#128680;', 'BREAKING NEWS!',
+                    `<strong>Uh oh!</strong> Something big just happened in the market!<br><br>
+                    Your company is about to be tested. Stay calm and make a smart choice!`);
+                setMainBtn('&#9888;&#65039; What Happened?!', openCrisis);
             } else {
-                showFinalResults();
+                showResults();
             }
+            updateUI();
         }
 
-        // ========================================
+        // ============================================
         // SIMULATION
-        // ========================================
-        function startSimulation() {
-            GameState.simDecision = 0;
-            GameState.simChoices = [];
-            GameState.orders = 70;
-            GameState.partners = 70;
-            GameState.drivers = 70;
-            GameState.platform = 70;
-            updateStats();
-            showScreen('sim-screen');
-            loadSimDecision();
-        }
+        // ============================================
+        function showSimStep() {
+            if (G.simStep >= simSteps.length) {
+                finishSim();
+                return;
+            }
 
-        function loadSimDecision() {
-            const decision = simDecisions[GameState.simDecision];
+            const step = simSteps[G.simStep];
+            document.getElementById('decision-card').style.display = 'block';
+            document.getElementById('coach-card').querySelector('button').style.display = 'none';
+            document.getElementById('decision-title').innerHTML = step.title;
+            document.getElementById('decision-desc').textContent = step.desc;
 
-            document.getElementById('sim-decision-title').innerHTML = `<span>${decision.icon}</span> ${decision.title}`;
-            document.getElementById('sim-decision-desc').textContent = decision.description;
-
-            const progress = ((GameState.simDecision + 1) / simDecisions.length) * 100;
-            document.getElementById('sim-progress-bar').style.width = progress + '%';
-            document.getElementById('sim-progress-text').textContent = `${GameState.simDecision + 1}/${simDecisions.length}`;
-
-            const optionsContainer = document.getElementById('sim-options');
-            optionsContainer.innerHTML = '';
-
-            decision.options.forEach((opt, idx) => {
-                const optionEl = document.createElement('div');
-                optionEl.className = 'decision-option';
-                optionEl.innerHTML = `
-                    <div class="decision-title">${opt.text}</div>
-                    <div class="decision-impact">${opt.impact}</div>
-                `;
-                optionEl.onclick = () => selectSimOption(idx, optionEl);
-                optionsContainer.appendChild(optionEl);
+            const el = document.getElementById('decision-choices');
+            el.innerHTML = '';
+            step.opts.forEach((o, i) => {
+                const div = document.createElement('div');
+                div.className = 'choice-card';
+                div.innerHTML = `<div class="choice-icon">${o.icon}</div><div class="choice-content"><div class="choice-title">${o.text}</div></div>`;
+                div.onclick = () => pickSim(i);
+                el.appendChild(div);
             });
 
-            GameState.selectedSimOption = null;
-            document.getElementById('sim-confirm').disabled = true;
+            G.simPick = null;
+            document.getElementById('decision-btn').disabled = true;
         }
 
-        function selectSimOption(idx, element) {
-            document.querySelectorAll('#sim-options .decision-option').forEach(el => {
-                el.classList.remove('selected');
+        function pickSim(i) {
+            document.querySelectorAll('#decision-choices .choice-card').forEach((el, idx) => {
+                el.classList.toggle('selected', idx === i);
             });
-            element.classList.add('selected');
-            GameState.selectedSimOption = idx;
-            document.getElementById('sim-confirm').disabled = false;
+            G.simPick = i;
+            document.getElementById('decision-btn').disabled = false;
         }
 
-        function confirmSimDecision() {
-            const decision = simDecisions[GameState.simDecision];
-            const choice = decision.options[GameState.selectedSimOption];
-
-            // Apply effects
-            GameState.orders = clamp(GameState.orders + choice.effects.orders, 0, 100);
-            GameState.partners = clamp(GameState.partners + choice.effects.partners, 0, 100);
-            GameState.drivers = clamp(GameState.drivers + choice.effects.drivers, 0, 100);
-            GameState.platform = clamp(GameState.platform + choice.effects.platform, 0, 100);
-
-            GameState.simChoices.push(choice.text);
+        function confirmDecision() {
+            const step = simSteps[G.simStep];
+            const choice = step.opts[G.simPick];
+            applyFX(choice.fx);
             addXP(15);
-            updateStats();
+            addReview(G.orders > 70 ? pick(goodReviews) : pick(badReviews));
 
-            GameState.simDecision++;
+            G.simStep++;
+            if (G.simStep >= simSteps.length) finishSim();
+            else showSimStep();
+        }
 
-            if (GameState.simDecision >= simDecisions.length) {
-                finishSimulation();
-            } else {
-                loadSimDecision();
+        function finishSim() {
+            document.getElementById('decision-card').style.display = 'none';
+            document.getElementById('coach-card').querySelector('button').style.display = 'inline-flex';
+
+            G.baseOrders = G.orders;
+            G.basePartners = G.partners;
+            G.baseDrivers = G.drivers;
+            G.baseHealth = G.health;
+
+            G.week = 2;
+            G.phase = 'mini';
+            showAchieve('&#127919;', 'Empire Builder', 'Your company is live!');
+
+            setCoach('&#129321;', 'Coach Morgan',
+                `<strong>AWESOME!</strong> Your company is up and running! &#128640;<br><br>
+                Orders: ${G.orders} | Restaurants: ${G.partners} | Drivers: ${G.drivers} | Health: ${G.health}<br><br>
+                Let's play a quick game before the next challenge!`);
+            setMainBtn('&#127919; Play Delivery Rush!', openMiniGame);
+            updateUI();
+        }
+
+        // ============================================
+        // MINI GAME
+        // ============================================
+        function openMiniGame() {
+            document.getElementById('game-modal').classList.add('show');
+            G.miniScore = 0;
+            document.getElementById('game-score').textContent = '0';
+            document.getElementById('game-time').textContent = '15s';
+            document.getElementById('game-arena').innerHTML = `<div class="game-hud"><div class="game-hud-item" id="game-time">15s</div><div class="game-hud-item">Score: <span id="game-score">0</span></div></div>`;
+        }
+
+        function startMiniGame() {
+            G.miniActive = true;
+            G.miniScore = 0;
+            let time = 15;
+            document.getElementById('game-btn').disabled = true;
+
+            const arena = document.getElementById('game-arena');
+
+            function spawn() {
+                if (!G.miniActive) return;
+                const t = document.createElement('div');
+                t.className = 'game-target ' + (Math.random() > 0.25 ? 'good' : 'bad');
+                t.textContent = t.classList.contains('good') ? pick(['&#127829;', '&#127828;', '&#127835;', '&#127836;', '&#127843;']) : '&#128163;';
+                t.style.left = rand(10, 80) + '%';
+                t.style.top = rand(15, 75) + '%';
+                t.onclick = (e) => {
+                    if (t.classList.contains('good')) {
+                        G.miniScore += 10;
+                        floatFX('+10', 'good', e.clientX, e.clientY);
+                    } else {
+                        G.miniScore = Math.max(0, G.miniScore - 15);
+                        floatFX('-15', 'bad', e.clientX, e.clientY);
+                    }
+                    document.getElementById('game-score').textContent = G.miniScore;
+                    t.remove();
+                };
+                arena.appendChild(t);
+                setTimeout(() => t.remove(), 1200);
             }
+
+            const spawnInt = setInterval(spawn, 550);
+            const timerInt = setInterval(() => {
+                time--;
+                document.getElementById('game-time').textContent = time + 's';
+                if (time <= 0) {
+                    clearInterval(spawnInt);
+                    clearInterval(timerInt);
+                    G.miniActive = false;
+                    endMiniGame();
+                }
+            }, 1000);
         }
 
-        function finishSimulation() {
-            // Save baseline
-            GameState.baselineOrders = GameState.orders;
-            GameState.baselinePartners = GameState.partners;
-            GameState.baselineDrivers = GameState.drivers;
-            GameState.baselinePlatform = GameState.platform;
+        function endMiniGame() {
+            document.getElementById('game-btn').disabled = false;
+            document.getElementById('game-modal').classList.remove('show');
 
-            // Update results screen
-            document.getElementById('result-orders').textContent = GameState.orders;
-            document.getElementById('result-partners').textContent = GameState.partners;
-            document.getElementById('result-drivers').textContent = GameState.drivers;
-            document.getElementById('result-platform').textContent = GameState.platform;
+            const bonus = Math.floor(G.miniScore / 10);
+            G.orders = clamp(G.orders + bonus, 0, 100);
+            addXP(G.miniScore);
 
-            document.getElementById('bar-orders').style.width = GameState.orders + '%';
-            document.getElementById('bar-partners').style.width = GameState.partners + '%';
-            document.getElementById('bar-drivers').style.width = GameState.drivers + '%';
-            document.getElementById('bar-platform').style.width = GameState.platform + '%';
-
-            showAchievement('&#127919;', 'Platform Launched!', 'Your delivery empire is live');
-
-            updatePhaseIndicator(3);
-            showScreen('sim-results-screen');
+            G.phase = 'mid';
+            setCoach('&#129464;', 'Coach Morgan',
+                `<strong>Great reflexes!</strong> You scored ${G.miniScore} points! &#127881;<br><br>
+                That earned you +${bonus} orders!<br><br>
+                Now let's see what you've learned about running a business!`);
+            setMainBtn('&#127891; Take the Quiz!', () => openQuiz('mid'));
+            updateUI();
         }
 
-        // ========================================
-        // MID QUIZ
-        // ========================================
-        function startCrisis() {
-            showScreen('mid-quiz-intro-screen');
-        }
-
-        function startMidQuiz() {
-            GameState.currentQuiz = 'mid';
-            GameState.currentQuestion = 0;
-            GameState.selectedAnswer = null;
-            GameState.midQuiz.correct = 0;
-            showScreen('quiz-screen');
-            loadQuizQuestion();
-        }
-
-        // ========================================
+        // ============================================
         // CRISIS
-        // ========================================
-        function initCrisis() {
-            const crisis = crisisScenarios[Math.floor(Math.random() * crisisScenarios.length)];
-            GameState.crisisType = crisis.id;
+        // ============================================
+        function openCrisis() {
+            const crisis = pick(crisisTypes);
+            document.body.classList.add('crisis-mode');
+            document.getElementById('crisis-alert').style.display = 'block';
+            document.getElementById('crisis-title').textContent = '&#9888;&#65039; ' + crisis.title;
+            document.getElementById('crisis-desc').textContent = crisis.desc;
 
-            document.getElementById('crisis-title').innerHTML = crisis.title;
-            document.getElementById('crisis-description').textContent = crisis.description;
+            document.getElementById('crisis-modal').classList.add('show');
+            document.getElementById('crisis-m-title').textContent = crisis.title;
+            document.getElementById('crisis-m-desc').textContent = crisis.desc;
+            document.getElementById('crisis-sports-tip').textContent = crisis.tip;
 
-            const optionsContainer = document.getElementById('crisis-options');
-            optionsContainer.innerHTML = '';
-
-            crisisResponses.forEach((resp, idx) => {
-                const optionEl = document.createElement('div');
-                optionEl.className = 'decision-option';
-                optionEl.innerHTML = `
-                    <div class="decision-title">${resp.text}</div>
-                    <div class="decision-impact">${resp.impact}</div>
-                `;
-                optionEl.onclick = () => selectCrisisOption(idx, optionEl);
-                optionsContainer.appendChild(optionEl);
+            const el = document.getElementById('crisis-choices');
+            el.innerHTML = '';
+            crisisOpts.forEach((o, i) => {
+                const div = document.createElement('div');
+                div.className = 'choice-card';
+                div.innerHTML = `<div class="choice-icon">${o.icon}</div><div class="choice-content"><div class="choice-title">${o.text}</div></div>`;
+                div.onclick = () => pickCrisis(i);
+                el.appendChild(div);
             });
 
-            GameState.selectedCrisisOption = null;
-            document.getElementById('crisis-confirm').disabled = true;
+            G.crisisPick = null;
+            document.getElementById('crisis-btn').disabled = true;
         }
 
-        function selectCrisisOption(idx, element) {
-            document.querySelectorAll('#crisis-options .decision-option').forEach(el => {
-                el.classList.remove('selected');
+        function pickCrisis(i) {
+            document.querySelectorAll('#crisis-choices .choice-card').forEach((el, idx) => {
+                el.classList.toggle('selected', idx === i);
             });
-            element.classList.add('selected');
-            GameState.selectedCrisisOption = idx;
-            document.getElementById('crisis-confirm').disabled = false;
+            G.crisisPick = i;
+            document.getElementById('crisis-btn').disabled = false;
         }
 
-        function confirmCrisisResponse() {
-            const response = crisisResponses[GameState.selectedCrisisOption];
+        function submitCrisis() {
+            const opt = crisisOpts[G.crisisPick];
+            const fx = { ...opt.fx };
+            Object.keys(fx).forEach(k => fx[k] += rand(-3, 3));
+            applyFX(fx);
 
-            // Apply effects with noise
-            GameState.orders = clamp(GameState.orders + response.effects.orders + randInt(-3, 3), 0, 100);
-            GameState.partners = clamp(GameState.partners + response.effects.partners + randInt(-3, 3), 0, 100);
-            GameState.drivers = clamp(GameState.drivers + response.effects.drivers + randInt(-3, 3), 0, 100);
-            GameState.platform = clamp(GameState.platform + response.effects.platform + randInt(-3, 3), 0, 100);
+            document.getElementById('crisis-modal').classList.remove('show');
+            document.body.classList.remove('crisis-mode');
+            document.getElementById('crisis-alert').style.display = 'none';
 
+            addXP(30);
+            showAchieve('&#9889;', 'Crisis Hero', 'Survived a market crisis!');
+            addReview(G.orders > 60 ? pick(goodReviews) : pick(badReviews));
+
+            G.week = 4;
+            G.phase = 'post';
+            setCoach('&#129464;', 'Coach Morgan',
+                `<strong>You made it through!</strong> &#128170;<br><br>
+                Orders: ${G.orders} | Restaurants: ${G.partners} | Drivers: ${G.drivers} | Health: ${G.health}<br><br>
+                One last quiz and you'll get your official certificate!`);
+            setMainBtn('&#127942; Final Quiz!', () => openQuiz('post'));
+            updateUI();
+        }
+
+        // ============================================
+        // ZONES & POWERUPS
+        // ============================================
+        function clickZone(id) {
+            if (G.zones.includes(id)) return;
+            const cost = G.zonePrices[id];
+            if (!cost || G.money < cost) return;
+
+            G.money -= cost;
+            G.zones.push(id);
+            G.orders = clamp(G.orders + 5, 0, 100);
+            G.partners = clamp(G.partners + 3, 0, 100);
             addXP(25);
-            updateStats();
-
-            // Show results
-            showCrisisResults();
+            addReview(pick(goodReviews));
+            updateUI();
         }
 
-        function showCrisisResults() {
-            const feedback = getCrisisFeedback();
-            document.getElementById('crisis-feedback').textContent = feedback;
+        function buyPowerup(id) {
+            if (G.powerups.includes(id)) return;
+            const costs = { speed: 500000, ads: 750000, robot: 1000000 };
+            const fxs = { speed: { orders: 5, drivers: 5 }, ads: { orders: 15 }, robot: { drivers: 5, health: 5 } };
 
-            document.getElementById('post-orders').textContent = GameState.orders;
-            document.getElementById('post-partners').textContent = GameState.partners;
-            document.getElementById('post-drivers').textContent = GameState.drivers;
-            document.getElementById('post-platform').textContent = GameState.platform;
-
-            document.getElementById('post-bar-orders').style.width = GameState.orders + '%';
-            document.getElementById('post-bar-partners').style.width = GameState.partners + '%';
-            document.getElementById('post-bar-drivers').style.width = GameState.drivers + '%';
-            document.getElementById('post-bar-platform').style.width = GameState.platform + '%';
-
-            showAchievement('&#9889;', 'Crisis Survivor!', 'You navigated the market shock');
-
-            updatePhaseIndicator(5);
-            showScreen('crisis-results-screen');
+            if (G.money < costs[id]) return;
+            G.money -= costs[id];
+            G.powerups.push(id);
+            applyFX(fxs[id]);
+            addXP(30);
+            document.querySelector(`[data-id="${id}"]`).classList.add('owned');
+            updateUI();
         }
 
-        function getCrisisFeedback() {
-            const avg = Math.round((GameState.orders + GameState.partners + GameState.drivers + GameState.platform) / 4);
+        // ============================================
+        // RESULTS
+        // ============================================
+        function showResults() {
+            showScreen('results-screen');
+            G.phase = 'results';
 
-            if (avg >= 75) {
-                return "Excellent! Your platform emerged stronger from the crisis. Your balanced approach protected all stakeholders.";
-            } else if (avg >= 60) {
-                return "Your platform survived the shock with some bruises. There's room for improvement, but you stayed afloat.";
-            } else {
-                return "The crisis hit hard. Some stakeholders suffered significantly. Consider how different choices might have helped.";
-            }
-        }
+            const prePct = Math.round((G.preScore.right / G.preScore.total) * 100);
+            const midPct = Math.round((G.midScore.right / G.midScore.total) * 100);
+            const postPct = Math.round((G.postScore.right / G.postScore.total) * 100);
+            const overall = Math.round(prePct * 0.2 + midPct * 0.3 + postPct * 0.5);
 
-        // ========================================
-        // POST QUIZ
-        // ========================================
-        function startPostQuiz() {
-            showScreen('post-quiz-intro-screen');
-        }
+            document.getElementById('res-pre').textContent = prePct + '%';
+            document.getElementById('res-mid').textContent = midPct + '%';
+            document.getElementById('res-post').textContent = postPct + '%';
+            document.getElementById('res-total').textContent = overall + '%';
 
-        function beginPostQuiz() {
-            GameState.currentQuiz = 'post';
-            GameState.currentQuestion = 0;
-            GameState.selectedAnswer = null;
-            GameState.postQuiz.correct = 0;
-            showScreen('quiz-screen');
-            loadQuizQuestion();
-        }
-
-        // ========================================
-        // FINAL RESULTS
-        // ========================================
-        function showFinalResults() {
-            const prePercent = Math.round((GameState.preQuiz.correct / GameState.preQuiz.total) * 100);
-            const midPercent = Math.round((GameState.midQuiz.correct / GameState.midQuiz.total) * 100);
-            const postPercent = Math.round((GameState.postQuiz.correct / GameState.postQuiz.total) * 100);
-
-            // Weighted overall (20% pre, 30% mid, 50% post)
-            const overall = Math.round(prePercent * 0.2 + midPercent * 0.3 + postPercent * 0.5);
-
-            // Determine tier
-            const simAvg = Math.round((GameState.orders + GameState.partners + GameState.drivers + GameState.platform) / 4);
+            const avg = Math.round((G.orders + G.partners + G.drivers + G.health) / 4);
             const mcqTier = overall >= 90 ? 'GOLD' : overall >= 75 ? 'SILVER' : 'BRONZE';
-            const simTier = simAvg >= 85 ? 'GOLD' : simAvg >= 70 ? 'SILVER' : 'BRONZE';
-
-            const tierRank = { GOLD: 3, SILVER: 2, BRONZE: 1 };
-            const finalTier = tierRank[mcqTier] <= tierRank[simTier] ? mcqTier : simTier;
-
-            // Check pass/fail
-            const passed = overall >= 65 && simAvg >= 60;
-
-            // Update UI
-            document.getElementById('final-pre-score').textContent = prePercent + '%';
-            document.getElementById('final-mid-score').textContent = midPercent + '%';
-            document.getElementById('final-post-score').textContent = postPercent + '%';
-            document.getElementById('final-overall').textContent = overall + '%';
+            const simTier = avg >= 85 ? 'GOLD' : avg >= 70 ? 'SILVER' : 'BRONZE';
+            const ranks = { GOLD: 3, SILVER: 2, BRONZE: 1 };
+            const tier = ranks[mcqTier] <= ranks[simTier] ? mcqTier : simTier;
+            const pass = overall >= 65 && avg >= 60;
 
             const badge = document.getElementById('result-badge');
-            badge.className = 'result-badge ' + finalTier.toLowerCase();
+            badge.className = 'result-badge ' + (pass ? tier.toLowerCase() : '');
 
-            if (passed) {
-                document.getElementById('final-title').textContent = 'Mission Complete!';
-                document.getElementById('final-subtitle').textContent = `You earned ${finalTier} status as a DeliverEmpire Tycoon!`;
-                badge.innerHTML = finalTier === 'GOLD' ? '&#127942;' : finalTier === 'SILVER' ? '&#129352;' : '&#129353;';
-
-                // Show claim code
-                const claimCode = generateClaimCode(finalTier);
-                document.getElementById('claim-code-value').textContent = claimCode;
-                document.getElementById('claim-code-box').style.display = 'block';
-
-                showAchievement('&#127942;', `${finalTier} Certified!`, 'You mastered platform economics');
+            if (pass) {
+                badge.textContent = tier === 'GOLD' ? '&#127942;' : tier === 'SILVER' ? '&#129352;' : '&#129353;';
+                document.getElementById('result-title').textContent = tier + ' CERTIFIED!';
+                document.getElementById('result-sub').textContent = 'You earned your DeliverEmpire badge!';
+                document.getElementById('claim-code').textContent = `BOW-M2-${tier}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+                document.getElementById('claim-box').style.display = 'block';
+                showAchieve('&#127942;', 'Champion', `Earned ${tier} certification!`);
             } else {
-                document.getElementById('final-title').textContent = 'Keep Learning!';
-                document.getElementById('final-subtitle').textContent = 'Review the concepts below and try again to earn your certification.';
-                badge.innerHTML = '&#128218;';
-                badge.className = 'result-badge';
+                badge.textContent = '&#128218;';
                 badge.style.background = 'var(--bg-lighter)';
-                document.getElementById('claim-code-box').style.display = 'none';
+                document.getElementById('result-title').textContent = 'Keep Learning!';
+                document.getElementById('result-sub').textContent = 'Review the topics and try again!';
+                document.getElementById('claim-box').style.display = 'none';
             }
 
-            // Concept mastery
-            const conceptGrid = document.getElementById('concept-mastery');
-            conceptGrid.innerHTML = '';
-
-            const concepts = ['Revenue Generation', 'Market Size', 'Revenue Sharing', 'Competitive Balance', 'Elasticity of Demand', 'Tradeoffs'];
-
-            concepts.forEach(concept => {
-                const misses = GameState.conceptMisses[concept] || 0;
-                const mastered = misses < 2;
-
-                const badge = document.createElement('div');
-                badge.className = `concept-badge ${mastered ? 'mastered' : 'review'}`;
-                badge.innerHTML = `
-                    <div class="concept-status ${mastered ? 'mastered' : 'review'}">
-                        ${mastered ? '&#10003;' : '!'}
-                    </div>
-                    <div class="concept-name">${concept}</div>
-                `;
-                conceptGrid.appendChild(badge);
+            // Concepts
+            const grid = document.getElementById('concepts');
+            grid.innerHTML = '';
+            const topics = ['Making Money', 'Market Size', 'Sharing Money', 'Fair Competition', 'Price Sensitivity', 'Tradeoffs'];
+            topics.forEach(t => {
+                const miss = G.conceptMiss[t] || 0;
+                const good = miss < 2;
+                const div = document.createElement('div');
+                div.className = `concept-item ${good ? 'good' : 'needs-work'}`;
+                div.innerHTML = `<div class="concept-icon ${good ? 'good' : 'needs-work'}">${good ? '&#10003;' : '!'}</div><div>${t}</div>`;
+                grid.appendChild(div);
             });
-
-            showScreen('final-results-screen');
         }
 
-        function restartGame() {
-            // Reset state
-            GameState.currentPhase = 1;
-            GameState.xp = 0;
-            GameState.orders = 70;
-            GameState.partners = 70;
-            GameState.drivers = 70;
-            GameState.platform = 70;
-            GameState.preQuiz = { correct: 0, total: 5 };
-            GameState.midQuiz = { correct: 0, total: 5 };
-            GameState.postQuiz = { correct: 0, total: 10 };
-            GameState.conceptMisses = {};
-            GameState.simChoices = [];
-            GameState.achievements = [];
+        function restart() {
+            Object.assign(G, {
+                money: 10000000, xp: 0, week: 1, phase: 'intro',
+                orders: 70, partners: 70, drivers: 70, health: 70,
+                baseOrders: 70, basePartners: 70, baseDrivers: 70, baseHealth: 70,
+                zones: ['downtown'], powerups: [],
+                quizType: null, quizIdx: 0, quizPick: null,
+                preScore: { right: 0, total: 5 }, midScore: { right: 0, total: 5 }, postScore: { right: 0, total: 10 },
+                conceptMiss: {}, simStep: 0, simPick: null, crisisPick: null, miniScore: 0, miniActive: false, badges: []
+            });
 
-            document.getElementById('stats-bar').style.display = 'none';
-            document.getElementById('phase-indicator').style.display = 'none';
+            document.querySelectorAll('.zone').forEach(z => {
+                z.classList.remove('unlocked');
+                z.classList.add('locked');
+            });
+            document.querySelector('[data-zone="downtown"]').classList.remove('locked');
+            document.querySelector('[data-zone="downtown"]').classList.add('unlocked');
+            document.querySelectorAll('.powerup').forEach(p => p.classList.remove('owned'));
+            document.getElementById('achievements').innerHTML = `<span style="opacity: 0.2;">&#128640;</span><span style="opacity: 0.2;">&#127891;</span><span style="opacity: 0.2;">&#127919;</span><span style="opacity: 0.2;">&#9889;</span><span style="opacity: 0.2;">&#127942;</span>`;
 
             showScreen('intro-screen');
         }
 
-        // ========================================
-        // INITIALIZE
-        // ========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            updateStats();
-        });
+        // Init
+        document.addEventListener('DOMContentLoaded', updateUI);
     </script>
 </body>
 </html>
